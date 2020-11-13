@@ -243,3 +243,49 @@ Rank county confirmed cases for each day in the last week (Sep 24-30th). Only ra
 
 Create a variable that has the number of confirmed cases from a week ago for Wayne county. Show the most recent dates on top (Hint: Use the `LAG()` function).
 
+## SUBQUERIES
+In the intro workshop, we saw how subqueries worked. For example,
+
+```SQL
+SELECT *, RANK() OVER (ORDER BY DeathTotal DESC) as Rank
+FROM (
+	SELECT Day, SUM(Deaths) AS DeathTotal
+	FROM Covid
+	WHERE county = 'Wayne'
+	GROUP BY Day
+) AS Alex
+```
+
+## CTE (Common Table Expression)
+The `WITH` clause allows you separate your subqueries to make your code more modular and easier to read. It is also known as a **Common Table Expression (CTE)** or subquery factoring.
+
+```SQL
+WITH cte AS
+(
+  SELECT Day, SUM(Deaths) AS DeathTotal
+  FROM Covid
+  WHERE county = 'Wayne'
+  GROUP BY Day
+)
+
+SELECT *, RANK() OVER (ORDER BY DeathTotal DESC) as Rank
+FROM cte
+```
+
+## Practice 4
+Return a table of Michigan cases (confirmed and probable) showing the max daily numbers for each calendar week (Hint: Use the `WEEK()` function and/or the `EXTRACT()` function).
+
+This dataset
+```CSV
+Week,Day,Cases
+1,Sun,10
+1,Mon,20
+2,Sun,30
+2,Mon,40
+```
+Should be transformed into this
+```
+Week,Max Daily Cases
+1,20
+2,40
+```
