@@ -17,8 +17,6 @@ FROM Covid
 </details>
 
 ## CASE
-<details>
-  <summary>MySQL and PostgreSQL</summary>
 Used to convert a continuous variable into a categorical or ordinal variable. It is equivalent to if else if statements or switch case statements in programming.
 
 ```SQL
@@ -32,7 +30,6 @@ SELECT County, Day, Cases,
 FROM Covid
 WHERE County = 'Washtenaw' AND CP = 'Confirmed'
 ```
-</details>
 
 ## Practice 1
 Create a variable called deathIndex that takes on the following values: 
@@ -135,7 +132,6 @@ REPLACE(column, substring_to_replace, replacement_substring)
 <details>
   <summary>MySQL</summary>
 
-Example: 
 ```SQL
 SELECT REPLACE(County, "Washtenaw", "WTW")
 FROM Covid
@@ -145,7 +141,6 @@ FROM Covid
 <details>
   <summary>PostgreSQL</summary>
 
-Example: 
 ```SQL
 UPDATE 
 	Covid 
@@ -159,10 +154,6 @@ SELECT * FROM Covid;
 
 A window function performs an aggregate-like operation on a set of query rows. However, whereas an aggregate operation groups query rows into a single result row, a window function produces a result for each row.
 
-<details>
-  <summary>MySQL and PostgreSQL</summary>
-
-Example: 
 ```SQL
 SELECT *,
 	SUM(Cases) OVER() AS Total
@@ -170,7 +161,6 @@ FROM Covid
 WHERE County = 'Genesee'
 ```
 **Note**: MySQL requires single quotes around the alias like so `SUM(Cases) OVER() AS 'Total'`
-</details>
 
 ### OVER
 You can use aggregate functions as window functions. They require the `OVER` clause to specify whether it is a window function or not. Some examples we saw in the Intro Class are:
