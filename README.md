@@ -27,7 +27,7 @@ My Intro to SQL workshop can be found [here](https://github.com/caocscar/worksho
 
 ## DB Fiddle
 - DB Fiddle is an online environment testing SQL code
-- DB Fiddle is like w3schools but has more functionality
+- DB Fiddle is like [w3schools](https://www.w3schools.com/sql/) but has more functionality
 - You can create tables and query the tables in the browser
 - In the left-hand window, you create the schema (columns and data types) and the data for a table
 - In the right-hand window, you query the tables
