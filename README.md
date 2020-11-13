@@ -1,5 +1,28 @@
-# Intermediate SQL Workshop
+# Intermediate SQL Workshop <!-- omit in toc -->
 
+## Table of Contents <!-- omit in toc -->
+- [SQL for Beginners](#sql-for-beginners)
+- [DB Fiddle](#db-fiddle)
+- [Dataset](#dataset)
+- [Part I: More SQL Syntax](#part-i-more-sql-syntax)
+- [IF](#if)
+- [CASE](#case)
+- [Practice 1](#practice-1)
+- [ROLLUP](#rollup)
+- [Practice 2](#practice-2)
+- [REPLACE](#replace)
+- [WINDOW FUNCTIONS](#window-functions)
+	- [OVER](#over)
+	- [Non-Aggregate Function Example: RANK](#non-aggregate-function-example-rank)
+	- [DENSE_RANK](#dense_rank)
+	- [WINDOW](#window)
+	- [PARTITION BY](#partition-by)
+- [Practice 3](#practice-3)
+- [SUBQUERIES](#subqueries)
+- [CTE (Common Table Expression)](#cte-common-table-expression)
+- [Practice 4](#practice-4)
+
+## SQL for Beginners
 My Intro to SQL workshop can be found [here](https://github.com/caocscar/workshops/tree/master/sql) as a Jupyter Notebook slide deck. This workshop builds off of that material.
 
 ## DB Fiddle
