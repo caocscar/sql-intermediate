@@ -5,9 +5,11 @@
 ## IF
 <details>
   <summary>MySQL</summary>
-Similar to the excel functionality for IF
+Similar to the Microsoft Excel functionality for IF
   
-`IF(expression, true expression, false expression)`
+```SQL
+IF(expression, true expression, false expression)
+```
 
 ```SQL
 SELECT County, 
@@ -15,6 +17,8 @@ IF (LENGTH(County) < 8, 'short', 'long') AS StringLength
 FROM Covid
 ```
 </details>
+
+**Note**: PostgreSQL does not support `IF` statement in `SELECT`
 
 ## CASE
 Used to convert a continuous variable into a categorical or ordinal variable. It is equivalent to if else if statements or switch case statements in programming.
