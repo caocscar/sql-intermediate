@@ -157,4 +157,99 @@ SELECT * FROM Covid;
 
 ## WINDOW FUNCTIONS
 
+A window function performs an aggregate-like operation on a set of query rows. However, whereas an aggregate operation groups query rows into a single result row, a window function produces a result for each row.
+
+<details>
+  <summary>MySQL and PostgreSQL</summary>
+
+Example: 
+```SQL
+SELECT *,
+	SUM(Cases) OVER() AS Total
+FROM Covid
+WHERE County = 'Genesee'
+```
+**Note**: MySQL requires single quotes around the alias like so `SUM(Cases) OVER() AS 'Total'`
+</details>
+
+### OVER
+You can use aggregate functions as window functions. They require the `OVER` clause to specify whether it is a window function or not. Some examples we saw in the Intro Class are:
+```
+SUM()
+COUNT()
+MIN()
+MAX()
+AVG()
+```
+
+You can also use non-aggregate functions that are used as window functions. They always require the `OVER` clause.
+```
+CUME_DIST()
+DENSE_RANK()
+FIRST_VALUE()
+LAG()
+LAST_VALUE()
+LEAD()
+NTH_VALUE()
+NTILE()
+PERCENT_RANK()
+RANK()
+ROW_NUMBER()
+```
+
+### Non-Aggregate Function Example: RANK
+If you want to rank rows, use the `RANK() OVER` function
+We use `ORDER BY` to determine the rank order
+
+```SQL
+SELECT County, 
+	Cases, 
+	RANK() OVER (ORDER BY Cases) AS Rank
+FROM Covid
+WHERE Day IN ('2020-06-01','2020-09-25') AND CP = 'Confirmed'
+```
+**Note**: MySQL requires single quotes around the alias like so `RANK() OVER (ORDER BY Cases) AS 'Rank'`
+
+### DENSE_RANK
+Notice ties have the same rank. If you don't want the ranking to skip any numbers, use `DENSE_RANK` instead
+
+```SQL
+SELECT County, 
+	Cases, 
+	DENSE_RANK() OVER (ORDER BY Cases DESC) AS Rank
+FROM Covid
+WHERE Day IN ('2020-06-01','2020-09-25') AND CP = 'Confirmed'
+```
+
+### WINDOW
+Alternatively use the `WINDOW` syntax
+Use case: when you use the same window more than once
+
+```SQL
+SELECT County, 
+	Cases,
+	RANK() OVER w AS Rank,
+	DENSE_RANK() OVER w AS Rank2
+FROM Covid
+WHERE Day IN ('2020-06-01','2020-09-25') AND CP = 'Confirmed'
+WINDOW w AS (ORDER BY Cases DESC)
+```
+
+### PARTITION BY
+Works like `GROUP BY` but with the `OVER` clause
+If we wanted to have the ranking be within a single day, we can use `PARTITION BY`
+
+```SQL
+SELECT Day, 
+	County, 
+	Cases, 
+	RANK() OVER (PARTITION BY Day ORDER BY Cases) AS Rank
+FROM Covid
+WHERE Day IN ('2020-06-01','2020-09-25') AND CP = 'Confirmed'
+```
+
+## Practice 3
+Rank county confirmed cases for each day in the last week (Sep 24-30th). Only rank counties starting with S. (i.e for each day, rank the “S” counties). Spell out the word “St” where applicable.
+
+Create a variable that has the number of confirmed cases from a week ago for Wayne county. Show the most recent dates on top (Hint: Use the `LAG()` function).
 
