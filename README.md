@@ -1,6 +1,28 @@
-# sql-intermediate
+# Intermediate SQL Workshop
 
-## More SQL Syntax
+My Intro to SQL workshop can be found [here](https://github.com/caocscar/workshops/tree/master/sql) as a Jupyter Notebook slide deck. This workshop builds off of that material.
+
+## DB Fiddle
+- DB Fiddle is an online environment testing SQL code
+- DB Fiddle is like w3schools but has more functionality
+- You can create tables and query the tables in the browser
+- In the left-hand window, you create the schema (columns and data types) and the data for a table
+- In the right-hand window, you query the tables
+- Link to db-fiddle: https://www.db-fiddle.com/
+- Switch the current database to `MySQL v8.0` (which is a common database in the wild) in the top-left corner
+- Switch the current database to `Postgres v10.0` (for Mayniacs) in the top-left corner
+
+## Dataset
+- We’ll be using Michigan COVID-19 public data. I filtered it to include records since the re-opening.
+- You can find it here at this gist https://gist.github.com/caocscar/b9a1418e5fd9c2cd69bb6f9d67fbc05a
+- Click on the `Raw` button in the top-right corner. This will bring up a new page.
+- Copy the entire contents (21472 Records + Header Row)
+- In the DB Fiddle window, click the `Text to DDL` button in lower-left
+- Give it a table name of `Covid`
+- Paste the contents into the `Formatted Text` window
+- Click `Append to Schema`
+
+## Part I: More SQL Syntax
 
 ## IF
 <details>
