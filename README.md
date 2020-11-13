@@ -43,6 +43,7 @@ Create a variable called deathIndex that takes on the following values:
 ## ROLLUP
 <details>
   <summary>MySQL</summary>
+	
 Suppose you want to add a total row to the bottom of a table. Based on the intro class, one way to do this is using `UNION`.
 
 ```SQL
@@ -79,6 +80,7 @@ GROUP BY CP WITH ROLLUP
 
 <details>
   <summary>PostgreSQL</summary>
+	
 Suppose you want to add a total row to the bottom of a table. Based on the intro class, one way to do this is using `UNION`.
 
 ```SQL
@@ -107,8 +109,8 @@ If you want to substitute meaningful labels instead of null, use the `GROUPING` 
 returns 1 when null occurs in a super-aggregate row, otherwise 0
 ```SQL
 SELECT 
-	  CASE
-        WHEN GROUPING(CP) = 0 THEN CP
+	CASE
+		WHEN GROUPING(CP) = 0 THEN CP
         ELSE 'Total'
     END AS CP,
 SUM(Cases) AS CaseTotal
@@ -123,4 +125,36 @@ ORDER BY CP
 Create a table that shows the total confirmed + probable deaths for each county. Include a row that has the total for Michigan. Only include counties that have a death.
 
 Expand the table above by CP status. What is different in the table from the result above?
+
+## REPLACE
+To replace values within a column: 
+```SQL
+REPLACE(column, substring_to_replace, replacement_substring)
+```
+
+<details>
+  <summary>MySQL</summary>
+
+Example: 
+```SQL
+SELECT REPLACE(County, "Washtenaw", "WTW")
+FROM Covid
+```
+</details>
+
+<details>
+  <summary>PostgreSQL</summary>
+
+Example: 
+```SQL
+UPDATE 
+	Covid 
+SET
+	County = REPLACE(County, 'Washtenaw', 'WTW');
+SELECT * FROM Covid;
+```
+</details>
+
+## WINDOW FUNCTIONS
+
 
