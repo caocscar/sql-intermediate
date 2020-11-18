@@ -21,6 +21,11 @@
 - [SUBQUERIES](#subqueries)
 - [CTE (Common Table Expression)](#cte-common-table-expression)
 - [Practice 4](#practice-4)
+- [Miscellaneous Commands](#miscellaneous-commands)
+- [PostgreSQL](#postgresql)
+	- [Show Postgres Version](#show-postgres-version)
+	- [List all public tables in database](#list-all-public-tables-in-database)
+	- [List table schema](#list-table-schema)
 
 ## SQL for Beginners
 My Intro to SQL workshop can be found [here](https://github.com/caocscar/workshops/tree/master/sql) as a Jupyter Notebook slide deck. This workshop builds off of that material.
@@ -338,3 +343,38 @@ Week,Max Daily Cases
 1,20
 2,40
 ```
+
+## Miscellaneous Commands
+
+## PostgreSQL
+### Show Postgres Version
+```SQL
+SELECT VERSION()
+```
+
+### List all public tables in database
+```SQL
+SELECT *
+FROM information_schema.tables
+WHERE table_schema = 'public'
+ORDER BY table_name;
+```
+Other `table_schema` types are `information_schema` and `pg_catalog`.
+
+Reference: https://www.postgresql.org/docs/10/infoschema-tables.html
+
+Alternatively,
+```SQL
+SELECT *
+FROM pg_catalog.pg_tables
+WHERE schemaname != 'pg_catalog' AND schemaname != 'information_schema';
+```
+Reference: https://www.postgresql.org/docs/10/view-pg-tables.html
+
+### List table schema
+```SQL
+SELECT table_name, column_name, data_type 
+FROM information_schema.columns
+WHERE table_name = 'vehicle_logs';
+```
+Reference: https://www.postgresql.org/docs/10/infoschema-columns.html
