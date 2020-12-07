@@ -85,6 +85,14 @@ FROM Covid
 WHERE County = 'Washtenaw' AND CP = 'Confirmed'
 ```
 
+## COALESCE
+Used to return the first non-null value in a list. We can use it to return a default value instead of `null` in the query. Here we return zero instead of `null`.
+```SQL
+SELECT COALESCE(SUM(Deaths), 0)
+FROM Covid
+WHERE County = 'Keweenaw'
+```
+
 ## Practice 1
 Create a variable called deathIndex that takes on the following values: 
 - -1 if deathIndex is 0  
