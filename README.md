@@ -314,8 +314,7 @@ FROM (
 The `WITH` clause allows you separate your subqueries to make your code more modular and easier to read. It is also known as a **Common Table Expression (CTE)** or subquery factoring.
 
 ```SQL
-WITH cte AS
-(
+WITH cte AS (
   SELECT Day, SUM(Deaths) AS DeathTotal
   FROM Covid
   WHERE county = 'Wayne'
@@ -324,6 +323,21 @@ WITH cte AS
 
 SELECT *, RANK() OVER (ORDER BY DeathTotal DESC) as Rank
 FROM cte
+```
+
+Use a comma and omit the subsequent `WITH` keyword for multiple CTEs.
+```SQL
+WITH cte1 AS (
+...
+),
+cte2 AS (
+...
+)
+
+SELECT *
+FROM cte1
+JOIN cte2
+ON cte1.pk = cte2.pk
 ```
 
 ## Practice 4
