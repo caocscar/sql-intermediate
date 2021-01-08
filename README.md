@@ -400,3 +400,11 @@ FROM information_schema.columns
 WHERE table_name = 'vehicle_logs';
 ```
 Reference: https://www.postgresql.org/docs/10/infoschema-columns.html
+
+### Profiling queries
+https://www.postgresql.org/docs/10/sql-explain.html
+```SQL
+explain
+SELECT COUNT(*)
+FROM Covid
+```
