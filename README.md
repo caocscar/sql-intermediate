@@ -425,7 +425,8 @@ JOIN LATERAL (
 	ORDER BY orderlinestatus.weight LIMIT 1
 ) AS subquery_statuslow ON (subquery_statuslow.orderid=orders.orderid),
 JOIN LATERAL (
-	SELECT orderlinestatus.name AS statushigh, orderlines.orderid 
+	SELECT orderlinestatus.name AS statushigh
+	,orderlines.orderid 
 	FROM orderlines 
     JOIN orderlinestatus USING (orderlinestatusid)
     WHERE orderlines.orderid = orders.orderid 
