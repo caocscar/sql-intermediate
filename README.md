@@ -419,8 +419,8 @@ JOIN LATERAL (
 	SELECT orderlinestatus.name AS statuslow
         ,orderlines.orderid 
 	FROM orderlines 
-    JOIN orderlinestatus USING (orderlinestatusid)
-    WHERE orderlines.orderid = orders.orderid 
+	JOIN orderlinestatus USING (orderlinestatusid)
+	WHERE orderlines.orderid = orders.orderid 
 	GROUP BY orderlines.orderid, orderlinestatus.name, orderlinestatus.weight
 	ORDER BY orderlinestatus.weight LIMIT 1
 ) AS subquery_statuslow ON (subquery_statuslow.orderid=orders.orderid),
@@ -428,8 +428,8 @@ JOIN LATERAL (
 	SELECT orderlinestatus.name AS statushigh
 	,orderlines.orderid 
 	FROM orderlines 
-    JOIN orderlinestatus USING (orderlinestatusid)
-    WHERE orderlines.orderid = orders.orderid 
+	JOIN orderlinestatus USING (orderlinestatusid)
+	WHERE orderlines.orderid = orders.orderid 
 	GROUP BY orderlines.orderid, orderlinestatus.name, orderlinestatus.weight
 	ORDER BY orderlinestatus.weight DESC LIMIT 1
 ) AS subquery_statushigh ON (subquery_statushigh.orderid=orders.orderid)
