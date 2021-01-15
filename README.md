@@ -23,6 +23,10 @@
 - [CTE (Common Table Expression)](#cte-common-table-expression)
 - [Practice 4](#practice-4)
 - [LATERAL JOIN](#lateral-join)
+- [Nested SELECT](#nested-select)
+- [CROSS JOIN](#cross-join)
+- [SELF JOIN](#self-join)
+- [USING and NATURAL](#using-and-natural)
 - [Miscellaneous Commands](#miscellaneous-commands)
 - [PostgreSQL](#postgresql)
 	- [Show Postgres Version](#show-postgres-version)
@@ -397,6 +401,73 @@ JOIN LATERAL (
 ) AS subquery_statushigh ON (subquery_statushigh.orderid=orders.orderid)
 ```
 Reference: https://www.davici.nl/blog/postgresql-lateral-join
+
+## Nested SELECT
+```SQL
+SELECT
+  salesperson.name,
+  -- find maximum sale size for this salesperson
+  (SELECT MAX(amount) AS amount
+    FROM all_sales
+    WHERE all_sales.salesperson_id = salesperson.id)
+  AS amount,
+  -- find customer for this maximum size
+  (SELECT customer_name
+    FROM all_sales
+    WHERE all_sales.salesperson_id = salesperson.id
+    AND all_sales.amount =
+         -- find maximum size, again
+         (SELECT MAX(amount) AS amount
+           FROM all_sales
+           WHERE all_sales.salesperson_id = salesperson.id))
+  AS customer_name
+FROM
+  salesperson;
+```
+Reference: https://dev.mysql.com/doc/refman/8.0/en/lateral-derived-tables.html
+
+## CROSS JOIN
+Performs a cartesian product of the two tables (combination of the two table rows). The result will be `rows(table1) * rows(table2)`
+```SQL
+SELECT source, nombre
+FROM suits
+CROSS JOIN locale
+```
+OR equivalently you can the comma notation
+```SQL
+SELECT source, nombre
+FROM suits, locale
+```
+
+## SELF JOIN
+Join a table with itself
+```SQL
+SELECT a.name, b.name, a.state
+FROM company a, company b
+WHERE a.state=b.state AND a.name != b.name
+```
+Reference: https://www.w3resource.com/sql/joins/join-a-table-to-itself.php
+
+## USING and NATURAL
+Here is a standard join statement
+```SQL
+SELECT customers.*, orders.*
+FROM customers
+JOIN orders ON customers.custid = orders.custid
+```
+`USING` with parentheses `()` can be used when the column names are identical in each table (explicit)
+```SQL
+SELECT customers.*, orders.*
+FROM customers
+JOIN orders USING (custid)
+```
+`NATURAL` can also be used when the column names are identical in each table (implicit)
+```SQL
+SELECT customers.*, orders.*
+FROM customers
+NATURAL JOIN orders
+```
+Reference: https://www.postgresql.org/docs/10/queries-table-expressions.html
 
 ## Miscellaneous Commands
 
