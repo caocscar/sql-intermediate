@@ -7,6 +7,7 @@
 - [Part I: More SQL Syntax](#part-i-more-sql-syntax)
 - [IF](#if)
 - [CASE](#case)
+- [COALESCE](#coalesce)
 - [Practice 1](#practice-1)
 - [ROLLUP](#rollup)
 - [Practice 2](#practice-2)
@@ -21,11 +22,13 @@
 - [SUBQUERIES](#subqueries)
 - [CTE (Common Table Expression)](#cte-common-table-expression)
 - [Practice 4](#practice-4)
+- [LATERAL JOIN](#lateral-join)
 - [Miscellaneous Commands](#miscellaneous-commands)
 - [PostgreSQL](#postgresql)
 	- [Show Postgres Version](#show-postgres-version)
 	- [List all public tables in database](#list-all-public-tables-in-database)
 	- [List table schema](#list-table-schema)
+	- [Profiling queries](#profiling-queries)
 
 ## SQL for Beginners
 My Intro to SQL workshop can be found [here](https://github.com/caocscar/workshops/tree/master/sql) as a Jupyter Notebook slide deck. This workshop builds off of that material.
@@ -366,6 +369,35 @@ Week,Max Daily Cases
 2,40
 ```
 
+## LATERAL JOIN
+Looks like window functions are not compatible with lateral joins since they require more than one row to operate properly.
+
+```SQL
+SELECT orders.orderid
+	,statuslow
+	,statushigh 
+FROM orders
+JOIN LATERAL (
+	SELECT orderlinestatus.name AS statuslow
+        ,orderlines.orderid 
+	FROM orderlines 
+	JOIN orderlinestatus USING (orderlinestatusid)
+	WHERE orderlines.orderid = orders.orderid 
+	GROUP BY orderlines.orderid, orderlinestatus.name, orderlinestatus.weight
+	ORDER BY orderlinestatus.weight LIMIT 1
+) AS subquery_statuslow ON (subquery_statuslow.orderid=orders.orderid),
+JOIN LATERAL (
+	SELECT orderlinestatus.name AS statushigh
+	,orderlines.orderid 
+	FROM orderlines 
+	JOIN orderlinestatus USING (orderlinestatusid)
+	WHERE orderlines.orderid = orders.orderid 
+	GROUP BY orderlines.orderid, orderlinestatus.name, orderlinestatus.weight
+	ORDER BY orderlinestatus.weight DESC LIMIT 1
+) AS subquery_statushigh ON (subquery_statushigh.orderid=orders.orderid)
+```
+Reference: https://www.davici.nl/blog/postgresql-lateral-join
+
 ## Miscellaneous Commands
 
 ## PostgreSQL
@@ -408,30 +440,3 @@ SELECT COUNT(*)
 FROM Covid
 ```
 Reference: https://www.postgresql.org/docs/10/sql-explain.html
-
-## LATERAL JOIN
-```SQL
-SELECT orders.orderid
-	,statuslow
-	,statushigh 
-FROM orders
-JOIN LATERAL (
-	SELECT orderlinestatus.name AS statuslow
-        ,orderlines.orderid 
-	FROM orderlines 
-	JOIN orderlinestatus USING (orderlinestatusid)
-	WHERE orderlines.orderid = orders.orderid 
-	GROUP BY orderlines.orderid, orderlinestatus.name, orderlinestatus.weight
-	ORDER BY orderlinestatus.weight LIMIT 1
-) AS subquery_statuslow ON (subquery_statuslow.orderid=orders.orderid),
-JOIN LATERAL (
-	SELECT orderlinestatus.name AS statushigh
-	,orderlines.orderid 
-	FROM orderlines 
-	JOIN orderlinestatus USING (orderlinestatusid)
-	WHERE orderlines.orderid = orders.orderid 
-	GROUP BY orderlines.orderid, orderlinestatus.name, orderlinestatus.weight
-	ORDER BY orderlinestatus.weight DESC LIMIT 1
-) AS subquery_statushigh ON (subquery_statushigh.orderid=orders.orderid)
-```
-Reference: https://www.davici.nl/blog/postgresql-lateral-join
