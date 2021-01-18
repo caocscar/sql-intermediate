@@ -374,7 +374,7 @@ Week,Max Daily Cases
 ```
 
 ## LATERAL JOIN
-Looks like window functions are not compatible with lateral joins since they require more than one row to operate properly.
+`Lateral` joins allow you to reference table columns in the preceding left table of the join. They serve as an alternative to using CTEs. Looks like window functions do not work with lateral joins since they require more than one row to operate properly.
 
 ```SQL
 SELECT orders.orderid

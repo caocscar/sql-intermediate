@@ -7,4 +7,4 @@ sid,company,city,state
 600,SC Johnson,Racine,Wisconsin
 700,Dole Food Company,Westlake Village,California
 800,Flowers Foods,Thomasville,Georgia
-900,Electronic Arts,Redwood City,Californiaß
+900,Electronic Arts,Redwood City,California
