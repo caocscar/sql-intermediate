@@ -526,5 +526,21 @@ ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO readaccess;
 
 -- Create a final user with password
 CREATE USER alex WITH PASSWORD 'cao';
+GRANT readaccess TO alex;
 ```
-GRANT readaccess TO mayread;
+
+Alternatively for tables, sequences, functions. Ref: https://wiki.postgresql.org/images/d/d1/Managing_rights_in_postgresql.pdf
+```SQL
+CREATE ROLE readonly LOGIN PASSWORD 'some_pass';
+-- Existing objects
+GRANT CONNECT ON DATABASE the_db TO readonly;
+GRANT USAGE ON SCHEMA public TO readonly;
+
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO readonly;
+GRANT SELECT ON ALL SEQUENCES IN SCHEMA public TO readonly;
+GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public TO readonly;
+-- New objects
+ALTER DEFAULT PRIVILEGES FOR ddl_user IN SCHEMA public GRANT SELECT ON TABLES TO readonly;
+ALTER DEFAULT PRIVILEGES FOR ddl_user IN SCHEMA public GRANT SELECT ON SEQUENCES TO readonly;
+ALTER DEFAULT PRIVILEGES FOR ddl_user IN SCHEMA public GRANT EXECUTE ON FUNCTIONS TO readonly;
+```
