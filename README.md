@@ -511,3 +511,20 @@ SELECT COUNT(*)
 FROM Covid
 ```
 Reference: https://www.postgresql.org/docs/10/sql-explain.html
+
+### Create Role and User for Read Only
+```SQL
+-- Create a group
+CREATE ROLE readaccess;
+
+-- Grant access to existing tables
+GRANT USAGE ON SCHEMA public TO readaccess;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO readaccess;
+
+-- Grant access to future tables
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO readaccess;
+
+-- Create a final user with password
+CREATE USER alex WITH PASSWORD 'cao';
+```
+GRANT readaccess TO mayread;
