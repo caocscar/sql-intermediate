@@ -506,8 +506,7 @@ Reference: https://www.postgresql.org/docs/10/infoschema-columns.html
 
 ### Profiling queries
 ```SQL
-explain
-SELECT COUNT(*)
+EXPLAIN SELECT COUNT(*)
 FROM Covid
 ```
 Reference: https://www.postgresql.org/docs/10/sql-explain.html
@@ -544,3 +543,11 @@ ALTER DEFAULT PRIVILEGES FOR ddl_user IN SCHEMA public GRANT SELECT ON TABLES TO
 ALTER DEFAULT PRIVILEGES FOR ddl_user IN SCHEMA public GRANT SELECT ON SEQUENCES TO readonly;
 ALTER DEFAULT PRIVILEGES FOR ddl_user IN SCHEMA public GRANT EXECUTE ON FUNCTIONS TO readonly;
 ```
+
+### List Indexes in Database
+```SQL
+SELECT *
+FROM pg_indexes
+WHERE schemaname = 'public'
+```
+Reference: https://www.postgresql.org/docs/10/view-pg-indexes.html
