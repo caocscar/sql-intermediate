@@ -504,9 +504,13 @@ WHERE table_name = 'vehicle_logs';
 ```
 Reference: https://www.postgresql.org/docs/10/infoschema-columns.html
 
-### Profiling queries
+### EXPLAIN (Profiling queries)
 ```SQL
 EXPLAIN SELECT COUNT(*)
+FROM Covid
+```
+```SQL
+EXPLAIN (ANALYZE, COSTS, VERBOSE, BUFFERS, FORMAT JSON) SELECT COUNT(*)
 FROM Covid
 ```
 Reference: https://www.postgresql.org/docs/10/sql-explain.html
