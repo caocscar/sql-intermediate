@@ -551,3 +551,9 @@ FROM pg_indexes
 WHERE schemaname = 'public'
 ```
 Reference: https://www.postgresql.org/docs/10/view-pg-indexes.html
+
+### Create Index
+```SQL
+CREATE INDEX name_idx ON table (column);
+```
+
