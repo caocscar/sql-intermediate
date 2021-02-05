@@ -561,3 +561,30 @@ Reference: https://www.postgresql.org/docs/10/view-pg-indexes.html
 CREATE INDEX name_idx ON table (column);
 ```
 
+### UNNEST
+Equivalent to pandas `explode` method expanding an array into a set of rows.
+```SQL
+SELECT log_name
+	,unnest(edge_id) AS edgeid
+	,unnest(lat) AS lat
+	,unnest(lon) AS lon
+	,unnest(autonomy_count) AS auto
+	,unnest(healthy_count) AS healthy
+FROM vehicle_autonomy_edges AS vae
+```
+
+OR if you want to add the array index number to the result
+```SQL
+SELECT vae.log_name
+	,a.edgeid
+	,a.lat
+	,a.lon
+	,a.auto
+	,a.healthy
+	,a.nr
+FROM vehicle_autonomy_edges AS vae
+CROSS JOIN LATERAL UNNEST(vae.edge_id, vae.lat, vae.lon, vae.autonomy_count, vae.healthy_count) WITH ORDINALITY AS a(edgeid, lat, lon, auto, healthy, nr)
+WHERE log_name LIKE '2021-01-04_m%'
+```
+Reference: https://www.postgresql.org/docs/10/functions-array.html
+https://stackoverflow.com/questions/8760419/postgresql-unnest-with-element-number
