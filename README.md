@@ -27,12 +27,18 @@
 - [CROSS JOIN](#cross-join)
 - [SELF JOIN](#self-join)
 - [USING and NATURAL](#using-and-natural)
+- [UNNEST](#unnest)
+- [EXPLAIN](#explain)
 - [Miscellaneous Commands](#miscellaneous-commands)
 - [PostgreSQL](#postgresql)
 	- [Show Postgres Version](#show-postgres-version)
 	- [List all public tables in database](#list-all-public-tables-in-database)
 	- [List table schema](#list-table-schema)
-	- [Profiling queries](#profiling-queries)
+	- [Create materialized view](#create-materialized-view)
+	- [List materialized views](#list-materialized-views)
+	- [Create Role and User for Read Only](#create-role-and-user-for-read-only)
+	- [Create Index](#create-index)
+	- [List Indexes in Database](#list-indexes-in-database)
 
 ## SQL for Beginners
 My Intro to SQL workshop can be found [here](https://github.com/caocscar/workshops/tree/master/sql) as a Jupyter Notebook slide deck. This workshop builds off of that material.
@@ -469,6 +475,46 @@ NATURAL JOIN orders
 ```
 Reference: https://www.postgresql.org/docs/10/queries-table-expressions.html
 
+## UNNEST
+Equivalent to pandas `explode` method expanding an array into a set of rows.
+```SQL
+SELECT log_name
+	,unnest(edge_id) AS edgeid
+	,unnest(lat) AS lat
+	,unnest(lon) AS lon
+	,unnest(autonomy_count) AS auto
+	,unnest(healthy_count) AS healthy
+FROM vehicle_autonomy_edges AS vae
+```
+
+OR if you want to add the array index number to the result
+```SQL
+SELECT vae.log_name
+	,a.edgeid
+	,a.lat
+	,a.lon
+	,a.auto
+	,a.healthy
+	,a.nr
+FROM vehicle_autonomy_edges AS vae
+CROSS JOIN LATERAL UNNEST(vae.edge_id, vae.lat, vae.lon, vae.autonomy_count, vae.healthy_count) WITH ORDINALITY AS a(edgeid, lat, lon, auto, healthy, nr)
+```
+Reference: https://www.postgresql.org/docs/10/functions-array.html
+https://stackoverflow.com/questions/8760419/postgresql-unnest-with-element-number
+
+## EXPLAIN
+Profiling queries for bottlenecks and optimization
+```SQL
+EXPLAIN SELECT COUNT(*)
+FROM Covid
+```
+```SQL
+EXPLAIN (ANALYZE, COSTS, VERBOSE, BUFFERS, FORMAT JSON) SELECT COUNT(*)
+FROM Covid
+```
+Reference: https://www.postgresql.org/docs/10/sql-explain.html
+
+
 ## Miscellaneous Commands
 
 ## PostgreSQL
@@ -498,22 +544,27 @@ Reference: https://www.postgresql.org/docs/10/view-pg-tables.html
 
 ### List table schema
 ```SQL
-SELECT table_name, column_name, data_type 
+SELECT table_name
+	,column_name
+	,data_type 
 FROM information_schema.columns
 WHERE table_name = 'vehicle_logs';
 ```
 Reference: https://www.postgresql.org/docs/10/infoschema-columns.html
 
-### EXPLAIN (Profiling queries)
+### Create materialized view
 ```SQL
-EXPLAIN SELECT COUNT(*)
-FROM Covid
+CREATE MATERIALIZED VIEW matview AS (
+	SELECT *
+	FROM table
+)
 ```
+
+### List materialized views
 ```SQL
-EXPLAIN (ANALYZE, COSTS, VERBOSE, BUFFERS, FORMAT JSON) SELECT COUNT(*)
-FROM Covid
+SELECT *
+FROM pg_matviews
 ```
-Reference: https://www.postgresql.org/docs/10/sql-explain.html
 
 ### Create Role and User for Read Only
 ```SQL
@@ -548,6 +599,11 @@ ALTER DEFAULT PRIVILEGES FOR ddl_user IN SCHEMA public GRANT SELECT ON SEQUENCES
 ALTER DEFAULT PRIVILEGES FOR ddl_user IN SCHEMA public GRANT EXECUTE ON FUNCTIONS TO readonly;
 ```
 
+### Create Index
+```SQL
+CREATE INDEX name_idx ON table (column);
+```
+
 ### List Indexes in Database
 ```SQL
 SELECT *
@@ -555,36 +611,3 @@ FROM pg_indexes
 WHERE schemaname = 'public'
 ```
 Reference: https://www.postgresql.org/docs/10/view-pg-indexes.html
-
-### Create Index
-```SQL
-CREATE INDEX name_idx ON table (column);
-```
-
-### UNNEST
-Equivalent to pandas `explode` method expanding an array into a set of rows.
-```SQL
-SELECT log_name
-	,unnest(edge_id) AS edgeid
-	,unnest(lat) AS lat
-	,unnest(lon) AS lon
-	,unnest(autonomy_count) AS auto
-	,unnest(healthy_count) AS healthy
-FROM vehicle_autonomy_edges AS vae
-```
-
-OR if you want to add the array index number to the result
-```SQL
-SELECT vae.log_name
-	,a.edgeid
-	,a.lat
-	,a.lon
-	,a.auto
-	,a.healthy
-	,a.nr
-FROM vehicle_autonomy_edges AS vae
-CROSS JOIN LATERAL UNNEST(vae.edge_id, vae.lat, vae.lon, vae.autonomy_count, vae.healthy_count) WITH ORDINALITY AS a(edgeid, lat, lon, auto, healthy, nr)
-WHERE log_name LIKE '2021-01-04_m%'
-```
-Reference: https://www.postgresql.org/docs/10/functions-array.html
-https://stackoverflow.com/questions/8760419/postgresql-unnest-with-element-number
