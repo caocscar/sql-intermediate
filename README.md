@@ -4,6 +4,7 @@
 - [SQL for Beginners](#sql-for-beginners)
 - [DB Fiddle](#db-fiddle)
 - [Dataset](#dataset)
+- [SQL Order of Operations](#sql-order-of-operations)
 - [Part I: More SQL Syntax](#part-i-more-sql-syntax)
 - [IF](#if)
 - [CASE](#case)
@@ -62,6 +63,17 @@ My Intro to SQL workshop can be found [here](https://github.com/caocscar/worksho
 - Give it a table name of `Covid`
 - Paste the contents into the `Formatted Text` window
 - Click `Append to Schema`
+
+## SQL Order of Operations
+SQL queries are not executed sequentially when you write it. It is executed in the following order
+1. FROM / JOIN
+2. WHERE
+3. GROUP BY
+4. HAVING
+5. SELECT
+6. DISTINCT
+7. ORDER BY
+8. LIMIT / OFFSET
 
 ## Part I: More SQL Syntax
 
