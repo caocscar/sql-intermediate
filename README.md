@@ -22,6 +22,7 @@
 - [Practice 3](#practice-3)
 - [SUBQUERIES](#subqueries)
 - [CTE (Common Table Expression)](#cte-common-table-expression)
+- [Scalar Subquery](#scalar-subquery)
 - [Practice 4](#practice-4)
 - [LATERAL JOIN](#lateral-join)
 - [Nested SELECT](#nested-select)
@@ -371,6 +372,14 @@ SELECT *
 FROM cte1
 JOIN cte2
 ON cte1.pk = cte2.pk
+```
+
+## Scalar Subquery
+A scalar subquery is an ordinary `SELECT` query in parentheses that returns exactly **one row with one column**.
+```SQL
+SELECT name
+	,(SELECT max(pop) FROM cities WHERE cities.state = states.name)
+FROM states;
 ```
 
 ## Practice 4
