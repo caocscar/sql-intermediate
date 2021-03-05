@@ -41,6 +41,12 @@
 	- [Create Role and User for Read Only](#create-role-and-user-for-read-only)
 	- [Create Index](#create-index)
 	- [List Indexes in Database](#list-indexes-in-database)
+- [Types of SQL Commands](#types-of-sql-commands)
+	- [DDL](#ddl)
+	- [DQL](#dql)
+	- [DML](#dml)
+	- [DCL](#dcl)
+	- [TCL](#tcl)
 
 ## SQL for Beginners
 My Intro to SQL workshop can be found [here](https://github.com/caocscar/workshops/tree/master/sql) as a Jupyter Notebook slide deck. This workshop builds off of that material.
@@ -632,3 +638,47 @@ FROM pg_indexes
 WHERE schemaname = 'public'
 ```
 Reference: https://www.postgresql.org/docs/10/view-pg-indexes.html
+
+## Types of SQL Commands
+- DDL - Data Definition Language
+- DQL - Data Query Language
+- DML - Data Manipulation Language
+- DCL - Data Control Language
+- TCL - Transaction Control Language
+
+### DDL
+Consists of the SQL commands that can be used to define the database schema. It simply deals with descriptions of the database schema and is used to create and modify the structure of database objects in the database.
+- CREATE
+- ALTER
+- DROP
+- RENAME
+- TRUNCATE
+- COMMENT
+
+### DQL
+DQL statements are used for performing queries on the data within schema objects. The purpose of DQL Command is to get some schema relation based on the query passed to it.
+- SELECT
+
+### DML
+The SQL commands that deals with the manipulation of data present in the database belong to DML or Data Manipulation Language and this includes most of the SQL statements.
+- INSERT
+- UPDATE
+- DELETE
+- MERGE
+- CALL
+- EXPLAIN PLAN
+- LOCK TABLE
+
+### DCL
+DCL mainly deals with the rights, permissions and other controls of the database system.
+- GRANT
+- REVOKE
+
+### TCL
+TCL commands deals with the transaction within the database.
+- COMMIT
+- ROLLBACK
+- SAVEPOINT
+- SET TRANSACTION
+  
+Reference: https://www.geeksforgeeks.org/sql-ddl-dql-dml-dcl-tcl-commands/
