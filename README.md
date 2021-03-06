@@ -6,6 +6,7 @@
 - [Dataset](#dataset)
 - [SQL Order of Operations](#sql-order-of-operations)
 - [Part I: More SQL Syntax](#part-i-more-sql-syntax)
+- [Set Operations (UNION, INTERSECT, EXCEPT)](#set-operations-union-intersect-except)
 - [IF](#if)
 - [CASE](#case)
 - [COALESCE](#coalesce)
@@ -83,6 +84,9 @@ SQL queries are not executed sequentially when you write it. It is executed in t
 8. LIMIT / OFFSET
 
 ## Part I: More SQL Syntax
+
+## Set Operations (UNION, INTERSECT, EXCEPT)
+These three set operations cover the union (`UNION`), intersection (`INTERSECT`) and difference (`EXCEPT`) between two sets (i.e. queries). Recall, from part I, that the queries must have the same number of columns and data types. Duplicates are removed unless `ALL` is used too.
 
 ## IF
 <details>
