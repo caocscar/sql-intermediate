@@ -77,11 +77,15 @@ SQL queries are not executed sequentially when you write it. It is executed in t
 1. FROM / JOIN
 2. WHERE
 3. GROUP BY
-4. HAVING
-5. SELECT
-6. DISTINCT
-7. ORDER BY
-8. LIMIT / OFFSET
+4. aggregate functions
+5. HAVING
+6. window functions
+7. SELECT
+8. DISTINCT
+9. set operations
+10. ORDER BY
+11. OFFSET
+12. LIMIT
 
 ## Part I: More SQL Syntax
 
