@@ -359,7 +359,7 @@ FROM (
 ```
 
 ## CTE (Common Table Expression)
-The `WITH` clause allows you separate your subqueries to make your code more modular and easier to read. It is also known as a **Common Table Expression (CTE)** or subquery factoring.
+The `WITH` clause allows you separate your subqueries to make your code more modular and easier to read. It is also known as a **Common Table Expression (CTE)** or subquery factoring. It is a temporary result set that you can reference within another SELECT, INSERT, UPDATE, or DELETE statement
 
 ```SQL
 WITH cte AS (
