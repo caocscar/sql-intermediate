@@ -37,6 +37,9 @@
 	- [Show Postgres Version](#show-postgres-version)
 	- [List all public tables in database](#list-all-public-tables-in-database)
 	- [List table schema](#list-table-schema)
+	- [Get Table Size](#get-table-size)
+	- [Get Database Size](#get-database-size)
+	- [Get TOAST information](#get-toast-information)
 	- [Create materialized view](#create-materialized-view)
 	- [List materialized views](#list-materialized-views)
 	- [Create Role and User for Read Only](#create-role-and-user-for-read-only)
@@ -579,13 +582,53 @@ Reference: https://www.postgresql.org/docs/10/view-pg-tables.html
 
 ### List table schema
 ```SQL
-SELECT table_name
-	,column_name
-	,data_type 
+SELECT *
 FROM information_schema.columns
 WHERE table_name = 'vehicle_logs';
 ```
 Reference: https://www.postgresql.org/docs/10/infoschema-columns.html
+
+### Get Table Size
+Query the total size of each table (including indexes and toast tables) in the current database (use `pg_relation_size` to exclude indexes (`pg_indexes_size`) and toast tables)
+```SQL
+SELECT relname AS relation
+	,pg_size_pretty(pg_total_relation_size(C.oid)) AS total_size
+FROM pg_class C
+LEFT JOIN pg_namespace N ON (N.oid = C.relnamespace)
+WHERE nspname NOT IN ('pg_catalog', 'information_schema')
+AND C.relkind <> 'i'
+AND nspname !~ '^pg_toast'
+ORDER BY pg_total_relation_size (C.oid) DESC
+```
+Reference: https://www.postgresql.org/docs/10/functions-admin.html
+https://stackoverflow.com/questions/41991380/whats-the-difference-between-pg-table-size-pg-relation-size-pg-total-relatio
+
+### Get Database Size
+Query the size of each database in the current database server
+```SQL
+SELECT pg_database.datname
+	,pg_size_pretty(pg_database_size(pg_database.datname)) AS size
+FROM pg_database;
+```
+
+Reference: https://www.postgresqltutorial.com/postgresql-database-indexes-table-size/
+
+### Get TOAST information
+Query to find out all tables with TOAST tables
+```SQL
+SELECT oid
+	,oid::regclass
+	,reltoastrelid
+    ,reltoastrelid::regclass
+    ,pg_size_pretty(pg_relation_size(reltoastrelid)) AS toast_size
+FROM pg_class
+WHERE relkind = 'r'
+AND reltoastrelid <> 0
+ORDER BY toast_size DESC;
+```
+Reference: https://www.postgresql.org/docs/9.3/catalog-pg-class.html
+https://dba.stackexchange.com/questions/264691/understanding-where-pg-toast-is-coming-from
+https://stackoverflow.com/questions/41991380/whats-the-difference-between-pg-table-size-pg-relation-size-pg-total-relatio
 
 ### Create materialized view
 ```SQL
