@@ -259,16 +259,32 @@ SELECT * FROM Covid;
 </details>
 
 ## FILTER
+If we wanted to bin and count student grades, we could use a CTE with `CASE`.
 ```SQL
-SELECT COUNT(1) AS TotalStudents 
-	,COUNT(1) FILTER (WHERE Marks BETWEEN 40 AND 59) AS TotalGrade_C
-	,COUNT(1) FILTER (WHERE Marks BETWEEN 60 AND 79) AS TotalGrade_B
-	,COUNT(1) FILTER (WHERE Marks BETWEEN 80 AND 100) AS TotalGrade_A	
-FROM table;
+WITH cte AS (
+SELECT *,
+	CASE
+    	WHEN Marks BETWEEN 40 AND 60 THEN 'C'
+		WHEN Marks BETWEEN 60 AND 80 THEN 'B'
+		WHEN Marks BETWEEN 80 AND 100 THEN 'A'
+        ELSE 'F'
+    END AS grades
+FROM students
+)
+SELECT grades, count(*) as ct
+FROM cte
+GROUP BY grades
+```
+Alternatively, we can use the `FILTER` clause with `COUNT`. I also included a scalar subquery as another alternative.
+```SQL
+SELECT COUNT(*) AS total 
+	,COUNT(*) FILTER (WHERE Marks BETWEEN 40 AND 59) AS C
+	,COUNT(1) FILTER (WHERE Marks BETWEEN 60 AND 79) AS B
+	,(SELECT COUNT(*) FROM students WHERE Marks BETWEEN 80 AND 100) AS A
+FROM students;
 ```
 
 ## WINDOW FUNCTIONS
-
 A window function performs an aggregate-like operation on a set of query rows. However, whereas an aggregate operation groups query rows into a single result row, a window function produces a result for each row.
 
 ```SQL
