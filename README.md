@@ -14,12 +14,14 @@
 - [ROLLUP](#rollup)
 - [Practice 2](#practice-2)
 - [REPLACE](#replace)
+- [FILTER](#filter)
 - [WINDOW FUNCTIONS](#window-functions)
 	- [OVER](#over)
 	- [Non-Aggregate Function Example: RANK](#non-aggregate-function-example-rank)
 	- [DENSE_RANK](#dense_rank)
 	- [WINDOW](#window)
 	- [PARTITION BY](#partition-by)
+	- [RANGE (ROWS) BETWEEN](#range-rows-between)
 - [Practice 3](#practice-3)
 - [SUBQUERIES](#subqueries)
 - [CTE (Common Table Expression)](#cte-common-table-expression)
@@ -31,6 +33,7 @@
 - [SELF JOIN](#self-join)
 - [USING and NATURAL](#using-and-natural)
 - [UNNEST](#unnest)
+- [ON CONFLICT DO UPDATE](#on-conflict-do-update)
 - [EXPLAIN](#explain)
 - [Miscellaneous Commands](#miscellaneous-commands)
 - [PostgreSQL](#postgresql)
@@ -255,6 +258,15 @@ SELECT * FROM Covid;
 ```
 </details>
 
+## FILTER
+```SQL
+SELECT COUNT(1) AS TotalStudents 
+	,COUNT(1) FILTER (WHERE Marks BETWEEN 40 AND 59) AS TotalGrade_C
+	,COUNT(1) FILTER (WHERE Marks BETWEEN 60 AND 79) AS TotalGrade_B
+	,COUNT(1) FILTER (WHERE Marks BETWEEN 80 AND 100) AS TotalGrade_A	
+FROM table;
+```
+
 ## WINDOW FUNCTIONS
 
 A window function performs an aggregate-like operation on a set of query rows. However, whereas an aggregate operation groups query rows into a single result row, a window function produces a result for each row.
@@ -342,6 +354,25 @@ SELECT Day,
 FROM Covid
 WHERE Day IN ('2020-06-01','2020-09-25') AND CP = 'Confirmed'
 ```
+
+### RANGE (ROWS) BETWEEN
+Suppose we wanted to get the most recent number of daily cases per county. We could filter by date and show the cases for the most recent day but what if some counties did not report cases the day. We would want the most recent data they had. We could use the `LAST_VALUE` window function in conjunction with `RANGE BETWEEN` to do so. The latter function defines the *frame clause* in the partition. Here it goes from the first row to the last row because of the `UNBOUNDED` syntax.
+```SQL
+With cte AS (
+SELECT LAST_VALUE(Cases) OVER (PARTITION BY County ORDER BY Day ASC RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS recent_cases
+FROM Covid
+)
+```
+Here the frame_clause is `RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING`. It usually takes the form of  
+`{ RANGE | ROWS } BETWEEN frame_start AND frame_end`  
+OR  
+`{ RANGE | ROWS } frame_start`  
+The default frame clause is `RANGE UNBOUNDED PRECEDING`, which is the same as `RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW`
+
+If you wanted to create a window that included the past 5 entries for a 5-day moving average, for example, your frame clause would be `ROWS BETWEEN 4 PRECEDING AND CURRENT ROW`.  Likewise, if you wanted to create a window for a median filter of size 7, your syntax would be
+`ROWS BETWEEN 2 PRECEDING AND 2 FOLLOWING`
+
+Reference: https://www.postgresql.org/docs/10/sql-expressions.html#SYNTAX-WINDOW-FUNCTIONS
 
 ## Practice 3
 Rank county confirmed cases for each day in the last week (Sep 24-30th). Only rank counties starting with S. (i.e for each day, rank the “S” counties). Spell out the word “St” where applicable.
@@ -539,6 +570,26 @@ CROSS JOIN LATERAL UNNEST(vae.edge_id, vae.lat, vae.lon, vae.autonomy_count, vae
 ```
 Reference: https://www.postgresql.org/docs/10/functions-array.html
 https://stackoverflow.com/questions/8760419/postgresql-unnest-with-element-number
+
+## ON CONFLICT DO UPDATE
+The idea is that when you insert a new row into the table, PostgreSQL will update the row if it already exists, otherwise, it will insert the new row. The `UPDATE` or `INSERT` operation is a.k.a. **UPSERT**. The examples specifies that if the `date` is suppose to be constrained or unique in the table, then literally do nothing.
+```SQL
+INSERT INTO Covid (date, Cases)
+VALUES('2021-04-01', '6036') 
+ON CONFLICT (date) 
+DO NOTHING;
+```
+Alternatively, we can update the value (by prepending the new value in this case)
+```SQL
+INSERT INTO Covid (date, Cases)
+VALUES('2021-04-01', '6036') 
+ON CONFLICT (date) 
+DO UPDATE
+SET Cases = EXCLUDED.Cases || ' (' || Covid.Cases || ')';
+```
+`(date)` is considered the conflict target and performs all conflicts with usable constraints and unique indexes.
+
+Reference: https://www.postgresql.org/docs/10/sql-insert.html
 
 ## EXPLAIN
 Profiling queries for bottlenecks and optimization
