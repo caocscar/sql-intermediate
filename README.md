@@ -15,6 +15,7 @@
 - [Practice 2](#practice-2)
 - [REPLACE](#replace)
 - [FILTER](#filter)
+- [EXTRACT](#extract)
 - [WINDOW FUNCTIONS](#window-functions)
 	- [OVER](#over)
 	- [Non-Aggregate Function Example: RANK](#non-aggregate-function-example-rank)
@@ -283,6 +284,14 @@ SELECT COUNT(*) AS total
 	,(SELECT COUNT(*) FROM students WHERE Marks BETWEEN 80 AND 100) AS A
 FROM students;
 ```
+
+## EXTRACT
+Retrieves a datetime field (e.g. year, day) from a `timestamp`, `time`, or `interval` datatype. The example shows the difference in seconds between two dates.
+```SQL
+SELECT EXTRACT(EPOCH FROM TIMESTAMP '2021-04-17 15:45:14' - TIMESTAMP '2021-04-16 15:45:14')
+SELECT EXTRACT(EPOCH FROM '2021-04-26 08:55:15'::timestamp - '2021-04-16 15:45:14'::timestamp)
+```
+Reference: https://www.postgresql.org/docs/10/functions-datetime.html
 
 ## WINDOW FUNCTIONS
 A window function performs an aggregate-like operation on a set of query rows. However, whereas an aggregate operation groups query rows into a single result row, a window function produces a result for each row.
