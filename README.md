@@ -16,6 +16,7 @@
 - [REPLACE](#replace)
 - [FILTER](#filter)
 - [EXTRACT](#extract)
+- [TO_CHAR](#to_char)
 - [WINDOW FUNCTIONS](#window-functions)
 	- [OVER](#over)
 	- [Non-Aggregate Function Example: RANK](#non-aggregate-function-example-rank)
@@ -292,6 +293,12 @@ SELECT EXTRACT(EPOCH FROM TIMESTAMP '2021-04-17 15:45:14' - TIMESTAMP '2021-04-1
 SELECT EXTRACT(EPOCH FROM '2021-04-26 08:55:15'::timestamp - '2021-04-16 15:45:14'::timestamp)
 ```
 Reference: https://www.postgresql.org/docs/10/functions-datetime.html
+
+## TO_CHAR
+Format `timestamp` as a string
+```SQL
+SELECT TO_CHAR('2021-04-26 18:34:56' AT TIME ZONE 'America/Chicago', 'YYYY-MM-DD HH24:MI:SS')
+```
 
 ## WINDOW FUNCTIONS
 A window function performs an aggregate-like operation on a set of query rows. However, whereas an aggregate operation groups query rows into a single result row, a window function produces a result for each row.
