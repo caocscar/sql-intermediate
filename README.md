@@ -36,6 +36,7 @@
 - [SELF JOIN](#self-join)
 - [USING and NATURAL](#using-and-natural)
 - [UNNEST](#unnest)
+- [UPDATE](#update)
 - [ON CONFLICT DO UPDATE](#on-conflict-do-update)
 - [EXPLAIN](#explain)
 - [Miscellaneous Commands](#miscellaneous-commands)
@@ -619,6 +620,15 @@ CROSS JOIN LATERAL UNNEST(vae.edge_id, vae.lat, vae.lon, vae.autonomy_count, vae
 ```
 Reference: https://www.postgresql.org/docs/10/functions-array.html
 https://stackoverflow.com/questions/8760419/postgresql-unnest-with-element-number
+
+## UPDATE
+To update an existing table and return updated rows
+```SQL
+UPDATE vehicle_logs
+SET start_time::timestamp AT TIME ZONE 'America/Chicago'
+WHERE RIGHT(log_name, 8) = TO_CHAR(start_time, 'HH24-MI-SS')
+RETURNING *
+```
 
 ## ON CONFLICT DO UPDATE
 The idea is that when you insert a new row into the table, PostgreSQL will update the row if it already exists, otherwise, it will insert the new row. The `UPDATE` or `INSERT` operation is a.k.a. **UPSERT**. The examples specifies that if the `date` is suppose to be constrained or unique in the table, then literally do nothing.
