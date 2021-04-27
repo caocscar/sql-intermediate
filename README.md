@@ -17,6 +17,7 @@
 - [FILTER](#filter)
 - [EXTRACT](#extract)
 - [TO_CHAR](#to_char)
+- [Working with time zones](#working-with-time-zones)
 - [WINDOW FUNCTIONS](#window-functions)
 	- [OVER](#over)
 	- [Non-Aggregate Function Example: RANK](#non-aggregate-function-example-rank)
@@ -298,6 +299,22 @@ Reference: https://www.postgresql.org/docs/10/functions-datetime.html
 Format `timestamp` as a string
 ```SQL
 SELECT TO_CHAR('2021-04-26 18:34:56' AT TIME ZONE 'America/Chicago', 'YYYY-MM-DD HH24:MI:SS')
+```
+
+## Working with time zones
+Cast `timestamp with time zone` to local time `timestamp without time zone`
+```SQL
+SELECT utcz_time AT TIME ZONE 'America/Detroit' AS local_time
+```
+
+To convert `timestamp without time zone` to `timestamp with time zone` (back to UTC)
+```SQL
+SELECT local_time AT TIME ZONE 'America/Detroit'
+```
+
+Cast `timestamp with time zone` to `timestamp without time zone` without changing the time value
+```SQL
+SELECT utcz_time::timestamp
 ```
 
 ## WINDOW FUNCTIONS
