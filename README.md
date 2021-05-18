@@ -52,6 +52,7 @@
 	- [Create Role and User for Read Only](#create-role-and-user-for-read-only)
 	- [Create Index](#create-index)
 	- [List Indexes in Database](#list-indexes-in-database)
+	- [Toast (The Oversized-Attribute Storage Technique)](#toast-the-oversized-attribute-storage-technique)
 - [Types of SQL Commands](#types-of-sql-commands)
 	- [DDL](#ddl)
 	- [DQL](#dql)
@@ -61,6 +62,8 @@
 - [PSQL](#psql)
 	- [Connecting from the terminal](#connecting-from-the-terminal)
 	- [Common psql Commands](#common-psql-commands)
+	- [Queries](#queries)
+	- [Changing Autovacuum Settings](#changing-autovacuum-settings)
 
 ## SQL for Beginners
 My Intro to SQL workshop can be found [here](https://github.com/caocscar/workshops/tree/master/sql) as a Jupyter Notebook slide deck. This workshop builds off of that material.
@@ -803,6 +806,11 @@ WHERE schemaname = 'public'
 ```
 Reference: https://www.postgresql.org/docs/10/view-pg-indexes.html
 
+### Toast (The Oversized-Attribute Storage Technique)
+PostgreSQL uses a fixed page size (commonly 8 kB), and does not allow tuples to span multiple pages. Therefore, it is not possible to store very large field values directly. To overcome this limitation, large field values are compressed and/or broken up into multiple physical rows. The technique is affectionately known as TOAST. The TOAST infrastructure is also used to improve handling of large data values in-memory.
+
+Reference: https://www.postgresql.org/docs/10/storage-toast.html
+
 ## Types of SQL Commands
 - DDL - Data Definition Language
 - DQL - Data Query Language
@@ -865,7 +873,7 @@ Command|Description
 `\dt`|Show tables in database
 `\dt+`|Show tables in database with more info
 `\d+`|Describe a table with details
-`\du`|Show usersa nd their roles
+`\du`|Show users and their roles
 `\g`|Execute previous command
 `\s`|Command history
 `\i <filename>`|Execute psql commands from filename
@@ -875,3 +883,17 @@ Command|Description
 `\q`|Quit psql
 
 REFERENCE: https://www.postgresqltutorial.com/psql-commands/
+
+### Queries
+You can write multi-line queries directly from the prompt. Terminate lines with <kbd>Enter</kbd>. Terminate queries with a `;`.
+
+### Changing Autovacuum Settings
+```SQL
+ALTER TABLE vehicle_dash_image
+SET (
+	autovacuum_vacuum_threshold=120
+	,autovacuum_vacuum_cost_delay=20
+)
+```
+
+Reference: https://www.postgresql.org/docs/10/runtime-config-autovacuum.html
