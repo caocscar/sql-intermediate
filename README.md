@@ -63,7 +63,8 @@
 	- [Connecting from the terminal](#connecting-from-the-terminal)
 	- [Common psql Commands](#common-psql-commands)
 	- [Queries](#queries)
-	- [Changing Autovacuum Settings](#changing-autovacuum-settings)
+	- [Changing Autovacuum Settings (Table Storage Parameters)](#changing-autovacuum-settings-table-storage-parameters)
+	- [Reset Autovacuum Settings (Table Storage Parameters)](#reset-autovacuum-settings-table-storage-parameters)
 
 ## SQL for Beginners
 My Intro to SQL workshop can be found [here](https://github.com/caocscar/workshops/tree/master/sql) as a Jupyter Notebook slide deck. This workshop builds off of that material.
@@ -887,7 +888,7 @@ REFERENCE: https://www.postgresqltutorial.com/psql-commands/
 ### Queries
 You can write multi-line queries directly from the prompt. Terminate lines with <kbd>Enter</kbd>. Terminate queries with a `;`.
 
-### Changing Autovacuum Settings
+### Changing Autovacuum Settings (Table Storage Parameters)
 ```SQL
 ALTER TABLE vehicle_dash_image
 SET (
@@ -896,4 +897,15 @@ SET (
 )
 ```
 
-Reference: https://www.postgresql.org/docs/10/runtime-config-autovacuum.html
+### Reset Autovacuum Settings (Table Storage Parameters)
+```SQL
+ALTER TABLE vehicle_dash_image
+RESET (
+	autovacuum_vacuum_threshold
+	,autovacuum_vacuum_cost_delay
+)
+```
+
+References:
+- https://www.postgresql.org/docs/10/runtime-config-autovacuum.html
+- https://www.postgresql.org/docs/10/runtime-config-resource.html#RUNTIME-CONFIG-RESOURCE-VACUUM-COST
