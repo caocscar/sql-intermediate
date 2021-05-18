@@ -58,6 +58,9 @@
 	- [DML](#dml)
 	- [DCL](#dcl)
 	- [TCL](#tcl)
+- [PSQL](#psql)
+	- [Connecting from the terminal](#connecting-from-the-terminal)
+	- [Common psql Commands](#common-psql-commands)
 
 ## SQL for Beginners
 My Intro to SQL workshop can be found [here](https://github.com/caocscar/workshops/tree/master/sql) as a Jupyter Notebook slide deck. This workshop builds off of that material.
@@ -843,3 +846,32 @@ TCL commands deals with the transaction within the database.
 - SET TRANSACTION
   
 Reference: https://www.geeksforgeeks.org/sql-ddl-dql-dml-dcl-tcl-commands/
+
+## PSQL
+**psql** is a terminal-based front-end to PostgreSQL. You can use a local instance of the psql command line utility to connect to a PostgreSQL DB instance. You need either PostgreSQL or the psql client installed on your client computer.
+
+### Connecting from the terminal
+```Shell
+psql --host=<hostname> --username=<user> --password --dbname=<database-name> --port=5432 
+psql -h <hostname> -U <user> -W -d <database-name> --port=5432
+```
+Password prompt will appear after command is entered.
+
+### Common psql Commands
+Command|Description
+---|---
+`\l`|Show databases
+`\c <database>`|Switch to different database closing previous connection
+`\dt`|Show tables in database
+`\dt+`|Show tables in database with more info
+`\d+`|Describe a table with details
+`\du`|Show usersa nd their roles
+`\g`|Execute previous command
+`\s`|Command history
+`\i <filename>`|Execute psql commands from filename
+`\?`|Help
+`\h <COMMAND>`|Specific Help
+`\timing`|Turn on query execution time
+`\q`|Quit psql
+
+REFERENCE: https://www.postgresqltutorial.com/psql-commands/
