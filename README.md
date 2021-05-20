@@ -53,6 +53,8 @@
 	- [Create Index](#create-index)
 	- [List Indexes in Database](#list-indexes-in-database)
 	- [Toast (The Oversized-Attribute Storage Technique)](#toast-the-oversized-attribute-storage-technique)
+	- [Changing Autovacuum Settings (Table Storage Parameters)](#changing-autovacuum-settings-table-storage-parameters)
+	- [Reset Autovacuum Settings (Table Storage Parameters)](#reset-autovacuum-settings-table-storage-parameters)
 - [Types of SQL Commands](#types-of-sql-commands)
 	- [DDL](#ddl)
 	- [DQL](#dql)
@@ -63,8 +65,6 @@
 	- [Connecting from the terminal](#connecting-from-the-terminal)
 	- [Common psql Commands](#common-psql-commands)
 	- [Queries](#queries)
-	- [Changing Autovacuum Settings (Table Storage Parameters)](#changing-autovacuum-settings-table-storage-parameters)
-	- [Reset Autovacuum Settings (Table Storage Parameters)](#reset-autovacuum-settings-table-storage-parameters)
 
 ## SQL for Beginners
 My Intro to SQL workshop can be found [here](https://github.com/caocscar/workshops/tree/master/sql) as a Jupyter Notebook slide deck. This workshop builds off of that material.
@@ -99,7 +99,7 @@ SQL queries are not executed sequentially when you write it. It is executed in t
 6. window functions
 7. SELECT
 8. DISTINCT
-9. set operations
+9. set operations (UNION, INTERSECT, EXCEPT)
 10. ORDER BY
 11. OFFSET
 12. LIMIT
@@ -743,9 +743,10 @@ WHERE relkind = 'r'
 AND reltoastrelid <> 0
 ORDER BY toast_size DESC;
 ```
-Reference: https://www.postgresql.org/docs/9.3/catalog-pg-class.html
-https://dba.stackexchange.com/questions/264691/understanding-where-pg-toast-is-coming-from
-https://stackoverflow.com/questions/41991380/whats-the-difference-between-pg-table-size-pg-relation-size-pg-total-relatio
+Reference: 
+- https://www.postgresql.org/docs/10.0/catalog-pg-class.html
+- https://dba.stackexchange.com/questions/264691/understanding-where-pg-toast-is-coming-from
+- https://stackoverflow.com/questions/41991380/whats-the-difference-between-pg-table-size-pg-relation-size-pg-total-relatio
 
 ### Create materialized view
 ```SQL
@@ -784,15 +785,17 @@ CREATE ROLE readonly LOGIN PASSWORD 'some_pass';
 -- Existing objects
 GRANT CONNECT ON DATABASE the_db TO readonly;
 GRANT USAGE ON SCHEMA public TO readonly;
-
 GRANT SELECT ON ALL TABLES IN SCHEMA public TO readonly;
 GRANT SELECT ON ALL SEQUENCES IN SCHEMA public TO readonly;
 GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public TO readonly;
 -- New objects
-ALTER DEFAULT PRIVILEGES FOR ddl_user IN SCHEMA public GRANT SELECT ON TABLES TO readonly;
-ALTER DEFAULT PRIVILEGES FOR ddl_user IN SCHEMA public GRANT SELECT ON SEQUENCES TO readonly;
-ALTER DEFAULT PRIVILEGES FOR ddl_user IN SCHEMA public GRANT EXECUTE ON FUNCTIONS TO readonly;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO readonly;
+-- Alternative syntax
+ALTER DEFAULT PRIVILEGES FOR USER ddl_user IN SCHEMA public GRANT SELECT ON SEQUENCES TO readonly;
+ALTER DEFAULT PRIVILEGES FOR ROLE ddl_role IN SCHEMA public GRANT EXECUTE ON FUNCTIONS TO readonly;
 ```
+
+References: https://www.postgresql.org/docs/10/sql-alterdefaultprivileges.html
 
 ### Create Index
 ```SQL
@@ -811,6 +814,27 @@ Reference: https://www.postgresql.org/docs/10/view-pg-indexes.html
 PostgreSQL uses a fixed page size (commonly 8 kB), and does not allow tuples to span multiple pages. Therefore, it is not possible to store very large field values directly. To overcome this limitation, large field values are compressed and/or broken up into multiple physical rows. The technique is affectionately known as TOAST. The TOAST infrastructure is also used to improve handling of large data values in-memory.
 
 Reference: https://www.postgresql.org/docs/10/storage-toast.html
+
+### Changing Autovacuum Settings (Table Storage Parameters)
+```SQL
+ALTER TABLE vehicle_dash_image
+SET (
+	autovacuum_vacuum_threshold=120
+	,autovacuum_vacuum_cost_delay=20
+)
+```
+
+### Reset Autovacuum Settings (Table Storage Parameters)
+```SQL
+ALTER TABLE vehicle_dash_image
+RESET (
+	autovacuum_vacuum_threshold
+	,autovacuum_vacuum_cost_delay
+)
+```
+References:
+- https://www.postgresql.org/docs/10/runtime-config-autovacuum.html
+- https://www.postgresql.org/docs/10/runtime-config-resource.html#RUNTIME-CONFIG-RESOURCE-VACUUM-COST
 
 ## Types of SQL Commands
 - DDL - Data Definition Language
@@ -860,8 +884,9 @@ Reference: https://www.geeksforgeeks.org/sql-ddl-dql-dml-dcl-tcl-commands/
 **psql** is a terminal-based front-end to PostgreSQL. You can use a local instance of the psql command line utility to connect to a PostgreSQL DB instance. You need either PostgreSQL or the psql client installed on your client computer.
 
 ### Connecting from the terminal
-```Shell
+```Bash
 psql --host=<hostname> --username=<user> --password --dbname=<database-name> --port=5432 
+# Alternatively
 psql -h <hostname> -U <user> -W -d <database-name> --port=5432
 ```
 Password prompt will appear after command is entered.
@@ -869,43 +894,23 @@ Password prompt will appear after command is entered.
 ### Common psql Commands
 Command|Description
 ---|---
-`\l`|Show databases
-`\c <database>`|Switch to different database closing previous connection
-`\dt`|Show tables in database
-`\dt+`|Show tables in database with more info
-`\d+`|Describe a table with details
-`\du`|Show users and their roles
-`\g`|Execute previous command
-`\s`|Command history
-`\i <filename>`|Execute psql commands from filename
-`\?`|Help
-`\h <COMMAND>`|Specific Help
-`\timing`|Turn on query execution time
-`\q`|Quit psql
+`\l` | Show databases
+`\c <database>` | Switch to different database closing previous connection
+`\dt` | Show tables in database
+`\dt+` | Show tables in database with more info
+`\d+` | Describe a table with details
+`\du` | Show users and their roles
+`\ddp` | Show default access privileges
+`\dpp` | Show access privileges for tables, sequences, materialized views:qqq:q
+`\g` | Execute previous command
+`\s` | Command history
+`\i <filename>` | Execute psql commands from filename
+`\?` | Help
+`\h <COMMAND>` | Specific Help
+`\timing` | Turn on query execution time
+`\q` | Quit psql
 
 REFERENCE: https://www.postgresqltutorial.com/psql-commands/
 
 ### Queries
 You can write multi-line queries directly from the prompt. Terminate lines with <kbd>Enter</kbd>. Terminate queries with a `;`.
-
-### Changing Autovacuum Settings (Table Storage Parameters)
-```SQL
-ALTER TABLE vehicle_dash_image
-SET (
-	autovacuum_vacuum_threshold=120
-	,autovacuum_vacuum_cost_delay=20
-)
-```
-
-### Reset Autovacuum Settings (Table Storage Parameters)
-```SQL
-ALTER TABLE vehicle_dash_image
-RESET (
-	autovacuum_vacuum_threshold
-	,autovacuum_vacuum_cost_delay
-)
-```
-
-References:
-- https://www.postgresql.org/docs/10/runtime-config-autovacuum.html
-- https://www.postgresql.org/docs/10/runtime-config-resource.html#RUNTIME-CONFIG-RESOURCE-VACUUM-COST
