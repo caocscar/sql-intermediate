@@ -36,8 +36,9 @@
 - [SELF JOIN](#self-join)
 - [USING and NATURAL](#using-and-natural)
 - [UNNEST](#unnest)
+- [DELETE](#delete)
 - [UPDATE](#update)
-- [ON CONFLICT DO UPDATE](#on-conflict-do-update)
+- [ON CONFLICT DO UPDATE (NOTHING)](#on-conflict-do-update-nothing)
 - [EXPLAIN](#explain)
 - [Miscellaneous Commands](#miscellaneous-commands)
 - [PostgreSQL](#postgresql)
@@ -628,6 +629,14 @@ CROSS JOIN LATERAL UNNEST(vae.edge_id, vae.lat, vae.lon, vae.autonomy_count, vae
 Reference: https://www.postgresql.org/docs/10/functions-array.html
 https://stackoverflow.com/questions/8760419/postgresql-unnest-with-element-number
 
+## DELETE
+To delete existing rows from a table and return deleted rows
+```SQL
+DELETE FROM covid
+WHERE date < '2021-03-13'
+RETURNING *
+```
+
 ## UPDATE
 To update an existing table and return updated rows
 ```SQL
@@ -637,21 +646,24 @@ WHERE RIGHT(log_name, 8) = TO_CHAR(start_time, 'HH24-MI-SS')
 RETURNING *
 ```
 
-## ON CONFLICT DO UPDATE
-The idea is that when you insert a new row into the table, PostgreSQL will update the row if it already exists, otherwise, it will insert the new row. The `UPDATE` or `INSERT` operation is a.k.a. **UPSERT**. The examples specifies that if the `date` is suppose to be constrained or unique in the table, then literally do nothing.
+## ON CONFLICT DO UPDATE (NOTHING)
+The idea is that when you insert a new row into the table, PostgreSQL will update the row if it already exists, otherwise, it will insert the new row. The `UPDATE` or `INSERT` operation is a.k.a. **UPSERT**. This is equivalent to `INSERT IGNORE INTO` in other SQL languages. 
+
+The examples specifies that if the `date` is suppose to be constrained or unique in the table, then literally do nothing.
 ```SQL
 INSERT INTO Covid (date, Cases)
 VALUES('2021-04-01', '6036') 
 ON CONFLICT (date) 
 DO NOTHING;
 ```
-Alternatively, we can update the value (by prepending the new value in this case)
+Alternatively, we can update the value by using the `EXCLUDED` table. The current value is accessible by the table name (in this case `Covid`).
 ```SQL
-INSERT INTO Covid (date, Cases)
-VALUES('2021-04-01', '6036') 
+INSERT INTO Covid (date, Cases, Deaths)
+VALUES('2021-04-01', '6036', '2') 
 ON CONFLICT (date) 
 DO UPDATE
-SET Cases = EXCLUDED.Cases || ' (' || Covid.Cases || ')';
+SET Cases = EXCLUDED.Cases || ' (' || Covid.Cases || ')',
+Deaths = EXCLUDED.Deaths;
 ```
 `(date)` is considered the conflict target and performs all conflicts with usable constraints and unique indexes.
 
