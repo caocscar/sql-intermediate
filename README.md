@@ -39,6 +39,8 @@
 - [DELETE](#delete)
 - [UPDATE](#update)
 - [ON CONFLICT DO UPDATE (NOTHING)](#on-conflict-do-update-nothing)
+- [COPY TABLE SCHEMA TO A NEW TABLE](#copy-table-schema-to-a-new-table)
+- [COPY DATA INTO ANOTHER TABLE](#copy-data-into-another-table)
 - [EXPLAIN](#explain)
 - [Miscellaneous Commands](#miscellaneous-commands)
 - [PostgreSQL](#postgresql)
@@ -669,6 +671,25 @@ Deaths = EXCLUDED.Deaths;
 
 Reference: https://www.postgresql.org/docs/10/sql-insert.html
 
+## COPY TABLE SCHEMA TO A NEW TABLE
+```SQL
+SELECT *
+INTO brand_new_table
+FROM current_table
+LIMIT 0
+```
+
+## COPY DATA INTO ANOTHER TABLE
+```SQL
+INSERT INTO brand_new_table (col1, col3, col4)
+SELECT col1
+	,col3
+	,col4
+FROM current_table
+ON CONFLICT (col1, col3) DO UPDATE
+SET col4 = EXCLUDED.col4;
+```
+
 ## EXPLAIN
 Profiling queries for bottlenecks and optimization
 ```SQL
@@ -680,7 +701,6 @@ EXPLAIN (ANALYZE, COSTS, VERBOSE, BUFFERS, FORMAT JSON) SELECT COUNT(*)
 FROM Covid
 ```
 Reference: https://www.postgresql.org/docs/10/sql-explain.html
-
 
 ## Miscellaneous Commands
 
