@@ -795,39 +795,29 @@ FROM pg_matviews
 ```
 
 ### Create Role and User for Read Only
+Here is some syntax to create a new role, granting privileges and a new user
 ```SQL
--- Create a group
+-- Create a new role with privileges
 CREATE ROLE readaccess;
-
--- Grant access to existing tables
+CREATE ROLE readaccess LOGIN PASSWORD 'some_pass';
+-- Grant on existing objects
+GRANT CONNECT ON DATABASE the_db TO readaccess;
 GRANT USAGE ON SCHEMA public TO readaccess;
 GRANT SELECT ON ALL TABLES IN SCHEMA public TO readaccess;
-
--- Grant access to future tables
+GRANT SELECT ON ALL SEQUENCES IN SCHEMA public TO readaccess;
+GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public TO readaccess;
+-- Grant for new objects
 ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO readaccess;
-
--- Create a final user with password
+-- Alternative syntax for grant on new objects
+ALTER DEFAULT PRIVILEGES FOR USER ddl_user IN SCHEMA public GRANT SELECT ON SEQUENCES TO readaccess;
+ALTER DEFAULT PRIVILEGES FOR ROLE ddl_role IN SCHEMA public GRANT EXECUTE ON FUNCTIONS TO readaccess;
+-- Create a user with password and grant existing role to user
 CREATE USER alex WITH PASSWORD 'cao';
 GRANT readaccess TO alex;
 ```
-
-Alternatively for tables, sequences, functions. Ref: https://wiki.postgresql.org/images/d/d1/Managing_rights_in_postgresql.pdf
-```SQL
-CREATE ROLE readonly LOGIN PASSWORD 'some_pass';
--- Existing objects
-GRANT CONNECT ON DATABASE the_db TO readonly;
-GRANT USAGE ON SCHEMA public TO readonly;
-GRANT SELECT ON ALL TABLES IN SCHEMA public TO readonly;
-GRANT SELECT ON ALL SEQUENCES IN SCHEMA public TO readonly;
-GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public TO readonly;
--- New objects
-ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO readonly;
--- Alternative syntax
-ALTER DEFAULT PRIVILEGES FOR USER ddl_user IN SCHEMA public GRANT SELECT ON SEQUENCES TO readonly;
-ALTER DEFAULT PRIVILEGES FOR ROLE ddl_role IN SCHEMA public GRANT EXECUTE ON FUNCTIONS TO readonly;
-```
-
-References: https://www.postgresql.org/docs/10/sql-alterdefaultprivileges.html
+References:  
+https://www.postgresql.org/docs/10/sql-alterdefaultprivileges.html
+https://wiki.postgresql.org/images/d/d1/Managing_rights_in_postgresql.pdf
 
 ### Create Index
 ```SQL
