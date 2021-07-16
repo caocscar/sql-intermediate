@@ -819,6 +819,34 @@ References:
 https://www.postgresql.org/docs/10/sql-alterdefaultprivileges.html
 https://wiki.postgresql.org/images/d/d1/Managing_rights_in_postgresql.pdf
 
+### Create Role and User for Read Write Privileges
+Here is some syntax to create a new role, granting privileges and a new user
+```SQL
+-- Start transaction block
+BEGIN;
+-- Create a new role with privileges
+CREATE ROLE readwriteaccess;
+-- Grant on existing objects
+GRANT CREATE, CONNECT ON DATABASE mercury_hiroshima TO readwriteaccess;
+GRANT USAGE ON SCHEMA public TO readwriteaccess;
+GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO readwriteaccess;
+GRANT SELECT, UPDATE ON ALL SEQUENCES IN SCHEMA public TO readwriteaccess;
+GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public TO readwriteaccess;
+-- Grant for new objects
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO readwriteaccess;
+-- Alternative syntax for grant on new objects
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT, UPDATE ON SEQUENCES TO readwriteaccess;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT EXECUTE ON FUNCTIONS TO readwriteaccess;
+-- End transaction block
+COMMIT;
+```
+
+### Rollback Transaction
+To rollback an unsuccessful transaction OR when you see this message `ERROR: current transaction is aborted, commands ignored until end of transaction block`.
+```SQL
+ROLLBACK TRANSACTION;
+```
+
 ### Create Index
 ```SQL
 CREATE INDEX name_idx ON table (column);
