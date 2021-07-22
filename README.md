@@ -25,6 +25,7 @@
 	- [WINDOW](#window)
 	- [PARTITION BY](#partition-by)
 	- [RANGE (ROWS) BETWEEN](#range-rows-between)
+- [PERCENTILE](#percentile)
 - [Practice 3](#practice-3)
 - [SUBQUERIES](#subqueries)
 - [CTE (Common Table Expression)](#cte-common-table-expression)
@@ -53,6 +54,8 @@
 	- [Create materialized view](#create-materialized-view)
 	- [List materialized views](#list-materialized-views)
 	- [Create Role and User for Read Only](#create-role-and-user-for-read-only)
+	- [Create Role and User for Read Write Privileges](#create-role-and-user-for-read-write-privileges)
+	- [Rollback Transaction](#rollback-transaction)
 	- [Create Index](#create-index)
 	- [List Indexes in Database](#list-indexes-in-database)
 	- [Toast (The Oversized-Attribute Storage Technique)](#toast-the-oversized-attribute-storage-technique)
@@ -433,6 +436,16 @@ If you wanted to create a window that included the past 5 entries for a 5-day mo
 `ROWS BETWEEN 2 PRECEDING AND 2 FOLLOWING`
 
 Reference: https://www.postgresql.org/docs/10/sql-expressions.html#SYNTAX-WINDOW-FUNCTIONS
+
+## PERCENTILE
+continuous percentile: returns a value corresponding to the specified fraction in the ordering, interpolating between adjacent input items if needed
+```SQL
+SELECT percentile_cont(0.5) WITHIN GROUP (ORDER BY deaths)
+FROM covid
+SELECT percentile_cont(ARRAY[0.25, 0.5, 0.75, 0.95]) WITHIN GROUP (ORDER BY deaths)
+FROM covid
+```
+Reference: https://www.postgresql.org/docs/10/functions-aggregate.html
 
 ## Practice 3
 Rank county confirmed cases for each day in the last week (Sep 24-30th). Only rank counties starting with S. (i.e for each day, rank the “S” counties). Spell out the word “St” where applicable.
