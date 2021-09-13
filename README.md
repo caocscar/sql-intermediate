@@ -825,7 +825,7 @@ ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO readaccess;
 ALTER DEFAULT PRIVILEGES FOR USER ddl_user IN SCHEMA public GRANT SELECT ON SEQUENCES TO readaccess;
 ALTER DEFAULT PRIVILEGES FOR ROLE ddl_role IN SCHEMA public GRANT EXECUTE ON FUNCTIONS TO readaccess;
 -- Create a user with password and grant existing role to user
-CREATE USER alex WITH PASSWORD 'cao';
+CREATE USER alex WITH LOGIN PASSWORD 'cao';
 GRANT readaccess TO alex;
 ```
 References:  
