@@ -55,6 +55,7 @@
 	- [List materialized views](#list-materialized-views)
 	- [Create Role and User for Read Only](#create-role-and-user-for-read-only)
 	- [Create Role and User for Read Write Privileges](#create-role-and-user-for-read-write-privileges)
+	- [Privileges](#privileges)
 	- [Rollback Transaction](#rollback-transaction)
 	- [Create Index](#create-index)
 	- [List Indexes in Database](#list-indexes-in-database)
@@ -853,6 +854,23 @@ ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT EXECUTE ON FUNCTIONS TO readwrit
 -- End transaction block
 COMMIT;
 ```
+
+### Privileges
+ACL Privilege abbereviations. 
+
+Privilege|Abbreviation|Applicable Object Types
+---|---|---
+SELECT|r (“read”)|LARGE OBJECT, SEQUENCE, TABLE (and table-like objects), table column
+INSERT|a (“append”)|TABLE, table column
+UPDATE|w (“write”)|LARGE OBJECT, SEQUENCE, TABLE, table column
+DELETE|d|TABLE
+TRUNCATE|D|TABLE
+REFERENCES|x|TABLE, table column
+TRIGGER|t|TABLE
+
+The command `GRANT ALL PRIVILEGES ON TABLE <tablename> TO readwriteaccess` grants the above 7 privileges.
+
+https://www.postgresql.org/docs/12/ddl-priv.html
 
 ### Rollback Transaction
 To rollback an unsuccessful transaction OR when you see this message `ERROR: current transaction is aborted, commands ignored until end of transaction block`.
