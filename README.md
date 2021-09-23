@@ -979,7 +979,7 @@ Command|Description
 `\c <database>` | Switch to different database closing previous connection
 `\dt` | Show tables in database
 `\dt+` | Show tables in database with more info
-`\d+` | Describe a table with details
+`\d+ <tablename>` | Describe a table with details
 `\du` | Show users and their roles
 `\ddp` | Show default access privileges
 `\dpp` | Show access privileges for tables, sequences, materialized views:qqq:q
