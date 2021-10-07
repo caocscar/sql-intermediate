@@ -36,6 +36,7 @@
 - [CROSS JOIN](#cross-join)
 - [SELF JOIN](#self-join)
 - [USING and NATURAL](#using-and-natural)
+- [Checking for values in ARRAYS](#checking-for-values-in-arrays)
 - [UNNEST](#unnest)
 - [DELETE](#delete)
 - [UPDATE](#update)
@@ -618,8 +619,25 @@ NATURAL JOIN orders
 ```
 Reference: https://www.postgresql.org/docs/10/queries-table-expressions.html
 
+## Checking for values in ARRAYS
+Checking for single value (exact match) against an `ARRAY` type. Types must match.
+```SQL
+SELECT *
+FROM health
+WHERE 'VELODYNE' = ANY(error_uid)
+```
+
+Checking for multiple values against an `ARRAY` type. Types must match thus the casting syntax.
+```SQL
+SELECT *
+FROM health
+WHERE ARRAY[7,14]::SMALLINT[] && error_uid
+```
+Reference: Array Functions and Operators  
+https://www.postgresql.org/docs/10/functions-array.html
+
 ## UNNEST
-Equivalent to pandas `explode` method expanding an array into a set of rows.
+Equivalent to pandas `explode` method expanding an `ARRAY` into a set of rows.
 ```SQL
 SELECT log_name
 	,unnest(edge_id) AS edgeid
