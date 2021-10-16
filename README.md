@@ -35,6 +35,7 @@
 - [Nested SELECT](#nested-select)
 - [CROSS JOIN](#cross-join)
 - [SELF JOIN](#self-join)
+- [CREATING COMBINATIONS OF TWO VARIABLES](#creating-combinations-of-two-variables)
 - [USING and NATURAL](#using-and-natural)
 - [Checking for values in ARRAYS](#checking-for-values-in-arrays)
 - [UNNEST](#unnest)
@@ -597,6 +598,16 @@ FROM company a, company b
 WHERE a.state=b.state AND a.name != b.name
 ```
 Reference: https://www.w3resource.com/sql/joins/join-a-table-to-itself.php
+
+## CREATING COMBINATIONS OF TWO VARIABLES
+Creating a combination of dates and hours example using the `generate_series` function to automatically generate the range needed with some filtering
+```SQL
+SELECT date_trunc('day', date_range)::date
+	,hour
+FROM generate_series('2021-07-26'::timestamp, '2021-10-01'::timestamp, '1 day'::interval) AS date_range
+CROSS JOIN (SELECT generate_series(7,19) AS hour) AS service_hours
+WHERE EXTRACT(DOW FROM date_range) BETWEEN 1 AND 5
+```
 
 ## USING and NATURAL
 Here is a standard join statement
