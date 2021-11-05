@@ -59,8 +59,10 @@
 	- [Create Role and User for Read Write Privileges](#create-role-and-user-for-read-write-privileges)
 	- [Privileges](#privileges)
 	- [Rollback Transaction](#rollback-transaction)
+	- [Setting up Trigger Functions](#setting-up-trigger-functions)
 	- [Create Index](#create-index)
 	- [List Indexes in Database](#list-indexes-in-database)
+	- [List schemas in Database](#list-schemas-in-database)
 	- [Toast (The Oversized-Attribute Storage Technique)](#toast-the-oversized-attribute-storage-technique)
 	- [Changing Autovacuum Settings (Table Storage Parameters)](#changing-autovacuum-settings-table-storage-parameters)
 	- [Reset Autovacuum Settings (Table Storage Parameters)](#reset-autovacuum-settings-table-storage-parameters)
@@ -907,6 +909,15 @@ To rollback an unsuccessful transaction OR when you see this message `ERROR: cur
 ROLLBACK TRANSACTION;
 ```
 
+### Setting up Trigger Functions
+Assuming you already have a trigger function defined, you can set it up with this command (command differs slightly for v10: `PROCEDURE` instead of `FUNCTION`).
+You can trigger on `INSERT, UPDATE, DELETE` etc...
+```SQL
+CREATE TRIGGER <trigger_name> 
+AFTER INSERT ON <table_name>
+    FOR EACH ROW EXECUTE PROCEDURE <trigger_function()>;
+```
+
 ### Create Index
 ```SQL
 CREATE INDEX name_idx ON table (column);
@@ -919,6 +930,12 @@ FROM pg_indexes
 WHERE schemaname = 'public'
 ```
 Reference: https://www.postgresql.org/docs/10/view-pg-indexes.html
+
+### List schemas in Database
+```SQL
+SELECT schema_name
+FROM information_schema.schemata;
+```
 
 ### Toast (The Oversized-Attribute Storage Technique)
 PostgreSQL uses a fixed page size (commonly 8 kB), and does not allow tuples to span multiple pages. Therefore, it is not possible to store very large field values directly. To overcome this limitation, large field values are compressed and/or broken up into multiple physical rows. The technique is affectionately known as TOAST. The TOAST infrastructure is also used to improve handling of large data values in-memory.
