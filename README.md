@@ -57,8 +57,10 @@
 	- [List materialized views](#list-materialized-views)
 	- [Create Role and User for Read Only](#create-role-and-user-for-read-only)
 	- [Create Role and User for Read Write Privileges](#create-role-and-user-for-read-write-privileges)
+- [Grant privileges for certain columns](#grant-privileges-for-certain-columns)
 	- [Privileges](#privileges)
 	- [Rollback Transaction](#rollback-transaction)
+- [Revoking Roles from Users](#revoking-roles-from-users)
 	- [Setting up Trigger Functions](#setting-up-trigger-functions)
 	- [Create Index](#create-index)
 	- [List Indexes in Database](#list-indexes-in-database)
@@ -886,6 +888,12 @@ ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT EXECUTE ON FUNCTIONS TO readwrit
 COMMIT;
 ```
 
+## Grant privileges for certain columns
+```SQL
+CREATE ROLE certain_column_access;
+GRANT SELECT|INSERT|UPDATE|DELETE (colA, colB, colC) ON <table> TO certain_column_access;
+```
+
 ### Privileges
 ACL Privilege abbereviations. 
 
@@ -907,6 +915,11 @@ https://www.postgresql.org/docs/12/ddl-priv.html
 To rollback an unsuccessful transaction OR when you see this message `ERROR: current transaction is aborted, commands ignored until end of transaction block`.
 ```SQL
 ROLLBACK TRANSACTION;
+```
+
+## Revoking Roles from Users
+```SQL
+REVOKE readwriteaccess FROM alex;
 ```
 
 ### Setting up Trigger Functions
