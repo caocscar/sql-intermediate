@@ -308,6 +308,19 @@ SELECT COUNT(*) AS total
 FROM students;
 ```
 
+This function is useful from converting data from long to wide format. Assume you have long dataset with four columns: `date, station, event_type, riders`. The example shows how to do it with both `FILTER` and `CASE`. Fill in nulls using `COALESCE`.
+```SQL
+SELECT date
+	,station
+	,SUM(riders) FILTER (WHERE event_type = 'pickup') AS pickup
+	,SUM(riders) FILTER (WHERE event_type = 'dropoff') AS dropoff
+	,SUM(CASE WHEN event_type = 'pickup' THEN riders END) AS pickup
+	,SUM(CASE WHEN event_type = 'dropoff' THEN riders END) AS dropoff
+FROM cte
+GROUP BY date, station
+ORDER BY date DESC, station 
+```
+
 ## EXTRACT
 Retrieves a datetime field (e.g. year, day) from a `timestamp`, `time`, or `interval` datatype. The example shows the difference in seconds between two dates.
 ```SQL
