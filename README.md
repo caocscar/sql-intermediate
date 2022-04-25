@@ -14,6 +14,7 @@
 - [ROLLUP](#rollup)
 - [Practice 2](#practice-2)
 - [REPLACE](#replace)
+- [SIMILAR TO Regular Expressions](#similar-to-regular-expressions)
 - [FILTER](#filter)
 - [EXTRACT](#extract)
 - [TO_CHAR](#to_char)
@@ -281,6 +282,15 @@ SET
 SELECT * FROM Covid;
 ```
 </details>
+
+## SIMILAR TO Regular Expressions
+Use `SIMILAR TO` syntax for SQL regular expressions. 
+```SQL
+SELECT *
+FROM drivers
+WHERE driver SIMILAR TO '%([1-9])'
+```
+Reference: https://www.postgresql.org/docs/10/functions-matching.html
 
 ## FILTER
 If we wanted to bin and count student grades, we could use a CTE with `CASE`.
@@ -568,7 +578,8 @@ JOIN LATERAL (
 	ORDER BY orderlinestatus.weight DESC LIMIT 1
 ) AS subquery_statushigh ON (subquery_statushigh.orderid=orders.orderid)
 ```
-Reference: https://www.davici.nl/blog/postgresql-lateral-join
+Reference: https://www.postgresql.org/docs/10/queries-table-expressions.html
+https://www.davici.nl/blog/postgresql-lateral-join
 
 ## Nested SELECT
 ```SQL
