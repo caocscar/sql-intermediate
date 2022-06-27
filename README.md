@@ -40,6 +40,8 @@
 - [USING and NATURAL](#using-and-natural)
 - [Checking for values in ARRAYS](#checking-for-values-in-arrays)
 - [UNNEST](#unnest)
+- [CREATE TABLES](#create-tables)
+- [INSERTING DATA](#inserting-data)
 - [DELETE](#delete)
 - [UPDATE](#update)
 - [ON CONFLICT DO UPDATE (NOTHING)](#on-conflict-do-update-nothing)
@@ -701,6 +703,30 @@ CROSS JOIN LATERAL UNNEST(vae.edge_id, vae.lat, vae.lon, vae.autonomy_count, vae
 ```
 Reference: https://www.postgresql.org/docs/10/functions-array.html
 https://stackoverflow.com/questions/8760419/postgresql-unnest-with-element-number
+
+## CREATE TABLES
+Here's a simple example of how to create a table.
+```SQL
+CREATE TABLE reanna (
+	id integer,
+	name text
+)
+```
+You can, of course, be much fancier and add constraints and defaults to the mix.
+
+## INSERTING DATA
+Inserting with column names (if not targeting all columns)
+```SQL
+INSERT INTO reanna (id, name)
+VALUES (1, 'bella')
+,(2, 'ciao')
+```
+OR if targeting all columns for insertion
+```SQL
+INSERT INTO reanna
+VALUES (3, 'au revoir')
+,(4, 'my lady')
+```
 
 ## DELETE
 To delete existing rows from a table and return deleted rows
