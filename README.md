@@ -47,6 +47,7 @@
 - [ON CONFLICT DO UPDATE (NOTHING)](#on-conflict-do-update-nothing)
 - [COPY TABLE SCHEMA TO A NEW TABLE](#copy-table-schema-to-a-new-table)
 - [COPY DATA INTO ANOTHER TABLE](#copy-data-into-another-table)
+- [FOREIGN TABLES](#foreign-tables)
 - [EXPLAIN](#explain)
 - [Miscellaneous Commands](#miscellaneous-commands)
 - [PostgreSQL](#postgresql)
@@ -786,6 +787,60 @@ FROM current_table
 ON CONFLICT (col1, col3) DO UPDATE
 SET col4 = EXCLUDED.col4;
 ```
+
+## FOREIGN TABLES
+PostgreSQL allows you to access data that resides outside PostgreSQL using regular SQL queries. Such data is referred to as **foreign data**. This example takes data from the same table name in two different databases in the same RDS instance and creates an equivalent foreign table in the same local database instance. They can be treated as views.
+```SQL
+-- create extension
+CREATE EXTENSION postgres_fdw;
+-- create server connection
+CREATE SERVER server_ann_arbor
+	FOREIGN DATA WRAPPER postgres_fdw
+	OPTIONS (host 'mercury.us-east-2.rds.amazonaws.com', port '5432', dbname 'mercury_ann_arbor');
+-- create user mapping
+CREATE USER MAPPING FOR may
+    SERVER server_ann_arbor
+    OPTIONS (user 'alex', password 'cao');
+-- create foreign table schema
+CREATE FOREIGN TABLE vehicle_log_statuses_ann_arbor (
+    log_name TEXT
+	,creation_time TIMESTAMP WITH TIME ZONE
+	,filtered_time TIMESTAMP WITH TIME ZONE
+	,extracted_time TIMESTAMP WITH TIME ZONE
+	,processed_time TIMESTAMP WITH TIME ZONE
+	,archived_time TIMESTAMP WITH TIME ZONE
+)
+SERVER server_ann_arbor
+OPTIONS (table_name 'vehicle_log_statuses');
+-- repeat steps above
+CREATE SERVER server_arlington
+	FOREIGN DATA WRAPPER postgres_fdw
+	OPTIONS (host 'mercury.us-east-2.rds.amazonaws.com', port '5432', dbname 'mercury_arlington');
+
+CREATE USER MAPPING FOR may
+    SERVER server_arlington
+    OPTIONS (user 'alex', password 'cao');
+
+CREATE FOREIGN TABLE vehicle_log_statuses_arlington (
+    log_name TEXT
+	,creation_time TIMESTAMP WITH TIME ZONE
+	,filtered_time TIMESTAMP WITH TIME ZONE
+	,extracted_time TIMESTAMP WITH TIME ZONE
+	,processed_time TIMESTAMP WITH TIME ZONE
+	,archived_time TIMESTAMP WITH TIME ZONE
+)
+SERVER server_arlington
+OPTIONS (table_name 'vehicle_log_statuses');
+
+SELECT *
+FROM vehicle_log_statuses_arlington
+UNION
+SELECT *
+FROM vehicle_log_statuses_ann_arbor
+```
+Reference: https://www.postgresql.org/docs/current/sql-createforeigntable.html  
+https://www.postgresql.org/docs/current/sql-createserver.html  
+https://www.postgresql.org/docs/current/sql-createusermapping.html
 
 ## EXPLAIN
 Profiling queries for bottlenecks and optimization
