@@ -801,6 +801,9 @@ CREATE SERVER server_ann_arbor
 CREATE USER MAPPING FOR may
     SERVER server_ann_arbor
     OPTIONS (user 'alex', password 'cao');
+
+GRANT USAGE ON FOREIGN SERVER server_ann_arbor TO readaccess;
+
 -- create foreign table schema
 CREATE FOREIGN TABLE vehicle_log_statuses_ann_arbor (
     log_name TEXT
@@ -820,6 +823,8 @@ CREATE SERVER server_arlington
 CREATE USER MAPPING FOR may
     SERVER server_arlington
     OPTIONS (user 'alex', password 'cao');
+
+GRANT USAGE ON FOREIGN SERVER server_arlington TO readaccess;
 
 CREATE FOREIGN TABLE vehicle_log_statuses_arlington (
     log_name TEXT
