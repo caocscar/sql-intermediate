@@ -797,8 +797,8 @@ CREATE EXTENSION postgres_fdw;
 CREATE SERVER server_ann_arbor
 	FOREIGN DATA WRAPPER postgres_fdw
 	OPTIONS (host '<host_name>', port '5432', dbname 'mercury_ann_arbor');
--- create user mapping
-CREATE USER MAPPING FOR local_user; options has credentials to connect to foreign database
+-- create user mapping; options has credentials to connect to foreign database
+CREATE USER MAPPING FOR local_user
     SERVER server_ann_arbor
     OPTIONS (user 'alex', password 'cao');
 
