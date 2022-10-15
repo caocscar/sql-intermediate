@@ -1041,6 +1041,17 @@ AFTER INSERT ON <table_name>
     FOR EACH ROW EXECUTE PROCEDURE <trigger_function()>;
 ```
 
+To disable an existing trigger functon on a table
+```SQL
+ALTER TABLE <table_name>
+DISABLE TRIGGER <trigger_name>
+```
+
+To drop an existing trigger function
+```SQL
+DROP TRIGGER <trigger_name> ON <table_name>;
+```
+
 ### Create Index
 ```SQL
 CREATE INDEX name_idx ON table (column);
