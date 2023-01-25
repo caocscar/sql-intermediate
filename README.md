@@ -17,12 +17,12 @@
 - [SIMILAR TO Regular Expressions](#similar-to-regular-expressions)
 - [FILTER](#filter)
 - [EXTRACT](#extract)
-- [TO_CHAR](#to_char)
+- [TO\_CHAR](#to_char)
 - [Working with time zones](#working-with-time-zones)
 - [WINDOW FUNCTIONS](#window-functions)
 	- [OVER](#over)
 	- [Non-Aggregate Function Example: RANK](#non-aggregate-function-example-rank)
-	- [DENSE_RANK](#dense_rank)
+	- [DENSE\_RANK](#dense_rank)
 	- [WINDOW](#window)
 	- [PARTITION BY](#partition-by)
 	- [RANGE (ROWS) BETWEEN](#range-rows-between)
@@ -966,8 +966,9 @@ GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public TO readaccess;
 -- Grant for new objects
 ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO readaccess;
 -- Alternative syntax for grant on new objects
-ALTER DEFAULT PRIVILEGES FOR USER ddl_user IN SCHEMA public GRANT SELECT ON SEQUENCES TO readaccess;
-ALTER DEFAULT PRIVILEGES FOR ROLE ddl_role IN SCHEMA public GRANT EXECUTE ON FUNCTIONS TO readaccess;
+ALTER DEFAULT PRIVILEGES FOR ROLE readaccess IN SCHEMA public GRANT SELECT ON SEQUENCES TO readaccess;
+-- OR
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT EXECUTE ON FUNCTIONS TO readaccess;
 -- Create a user with password and grant existing role to user
 CREATE USER alex WITH LOGIN PASSWORD 'cao';
 GRANT readaccess TO alex;
