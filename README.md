@@ -61,10 +61,12 @@
 	- [List materialized views](#list-materialized-views)
 	- [Create Role and User for Read Only](#create-role-and-user-for-read-only)
 	- [Create Role and User for Read Write Privileges](#create-role-and-user-for-read-write-privileges)
+	- [Revoking All Privileges from User](#revoking-all-privileges-from-user)
 	- [Grant privileges for certain columns](#grant-privileges-for-certain-columns)
 	- [Privileges](#privileges)
 	- [Rollback Transaction](#rollback-transaction)
 	- [Revoking Roles from Users](#revoking-roles-from-users)
+	- [Change Table Owner](#change-table-owner)
 	- [Setting up Trigger Functions](#setting-up-trigger-functions)
 	- [Create Index](#create-index)
 	- [List Indexes in Database](#list-indexes-in-database)
@@ -999,6 +1001,11 @@ ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT EXECUTE ON FUNCTIONS TO readwrit
 COMMIT;
 ```
 
+### Revoking All Privileges from User
+```SQL
+REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA public FROM <role>;
+```
+
 ### Grant privileges for certain columns
 ```SQL
 CREATE ROLE certain_column_access;
@@ -1032,6 +1039,15 @@ ROLLBACK TRANSACTION;
 ```SQL
 REVOKE readwriteaccess FROM alex;
 ```
+
+### Change Table Owner
+The following sql code generates more sql code to alter table owners
+```SQL
+SELECT 'ALTER TABLE ' || tablename || ' OWNER TO new_owner;' 
+FROM pg_tables
+WHERE tableowner = 'old_owner';
+```
+Then you just execute the newly generated code.
 
 ### Setting up Trigger Functions
 Assuming you already have a trigger function defined, you can set it up with this command (command differs slightly for v10: `PROCEDURE` instead of `FUNCTION`).
