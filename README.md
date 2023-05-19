@@ -48,6 +48,7 @@
 - [COPY TABLE SCHEMA TO A NEW TABLE](#copy-table-schema-to-a-new-table)
 - [COPY DATA INTO ANOTHER TABLE](#copy-data-into-another-table)
 - [FOREIGN TABLES](#foreign-tables)
+- [FUNCTIONS](#functions)
 - [EXPLAIN](#explain)
 - [Miscellaneous Commands](#miscellaneous-commands)
 - [PostgreSQL](#postgresql)
@@ -848,6 +849,25 @@ FROM vehicle_log_statuses_ann_arbor
 Reference: https://www.postgresql.org/docs/current/sql-createforeigntable.html  
 https://www.postgresql.org/docs/current/sql-createserver.html  
 https://www.postgresql.org/docs/current/sql-createusermapping.html
+
+## FUNCTIONS
+You can write functions like in other languages. Here's a basic function that executes three commands in succession. Function takes no arguments.
+```SQL
+CREATE OR REPLACE FUNCTION via_requests_from_to_raw_to_final() RETURNS text AS $$
+	BEGIN
+		-- 1st cmd
+		DELETE FROM alex_table;
+		-- 2nd cmd
+		INSERT INTO alex_table
+		SELECT RIDER_ID
+			,REQUEST_ID
+		FROM upstream_table;
+		--3rd cmd
+		RETURN 'Finished transformation';		
+	END
+$$ LANGUAGE plpgsql;
+```
+Reference: https://www.postgresql.org/docs/10/sql-createfunction.html
 
 ## EXPLAIN
 Profiling queries for bottlenecks and optimization
