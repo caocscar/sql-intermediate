@@ -987,9 +987,7 @@ GRANT SELECT ON ALL SEQUENCES IN SCHEMA public TO readaccess;
 GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public TO readaccess;
 -- Grant for new objects
 ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO readaccess;
--- Alternative syntax for grant on new objects
-ALTER DEFAULT PRIVILEGES FOR ROLE readaccess IN SCHEMA public GRANT SELECT ON SEQUENCES TO readaccess;
--- OR
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON SEQUENCES TO readaccess;
 ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT EXECUTE ON FUNCTIONS TO readaccess;
 -- Create a user with password and grant existing role to user
 CREATE USER alex WITH LOGIN PASSWORD 'cao';
@@ -1014,7 +1012,6 @@ GRANT SELECT, UPDATE ON ALL SEQUENCES IN SCHEMA public TO readwriteaccess;
 GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public TO readwriteaccess;
 -- Grant for new objects
 ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO readwriteaccess;
--- Alternative syntax for grant on new objects
 ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT, UPDATE ON SEQUENCES TO readwriteaccess;
 ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT EXECUTE ON FUNCTIONS TO readwriteaccess;
 -- End transaction block
