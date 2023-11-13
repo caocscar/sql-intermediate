@@ -977,8 +977,7 @@ FROM pg_matviews
 Here is some syntax to create a new role, granting privileges and a new user
 ```SQL
 -- Create a new role with privileges
-CREATE ROLE readaccess;
-CREATE ROLE readaccess LOGIN PASSWORD 'some_pass';
+CREATE ROLE readaccess LOGIN;
 -- Grant on existing objects
 GRANT CONNECT ON DATABASE the_db TO readaccess;
 GRANT USAGE ON SCHEMA public TO readaccess;
