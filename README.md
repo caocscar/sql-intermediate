@@ -846,6 +846,12 @@ UNION
 SELECT *
 FROM vehicle_log_statuses_ann_arbor
 ```
+
+Alternatively, you can simply import the tables without the need to manually create it using `IMPORT FOREIGN SCHEMA`.
+```SQL
+IMPORT FOREIGN SCHEMA public LIMIT TO (vehicle_log_statuses)
+FROM SERVER server_arlington INTO public;
+```
 Reference: https://www.postgresql.org/docs/current/sql-createforeigntable.html  
 https://www.postgresql.org/docs/current/sql-createserver.html  
 https://www.postgresql.org/docs/current/sql-createusermapping.html
