@@ -1011,6 +1011,7 @@ BEGIN;
 CREATE ROLE readwriteaccess;
 -- Grant on existing objects
 GRANT CREATE, CONNECT ON DATABASE mercury_hiroshima TO readwriteaccess;
+GRANT CREATE ON SCHEMA public TO readwriteaccess;
 GRANT USAGE ON SCHEMA public TO readwriteaccess;
 GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO readwriteaccess;
 GRANT SELECT, UPDATE ON ALL SEQUENCES IN SCHEMA public TO readwriteaccess;
